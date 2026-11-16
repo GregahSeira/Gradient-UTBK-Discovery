@@ -41,9 +41,9 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Data contoh yang harus dihitung sungguhan: delta mastery, skill naik, banding minggu lalu, soal per subtes, nama sekolah.
 
 ## Scope MVP (V1)
-- Hanya 2 gaya kartu: Ringkasan (default) dan Mastery Subtes.
-- Mastery Subtes: fokus ke effort latihan soal, hasil sebagai akibatnya. Pilih 1 subtes (bawaan: subtes dengan soal terbanyak). Judul besar "44 soal PK minggu ini" plus waktu belajar. Grafik kotak: tiap kotak = 1 soal (2 soal kalau lebih dari 96), warna = tingkat kesulitan, pudar = salah. Blok "Hasilnya": mastery subtes dari dan ke, plus 1 materi yang paling naik. Lalu streak. Sebaran tingkat kesulitan per subtes masih data contoh hasil skala dari total.
-- Materi, Custom (fokus subtes atau materi, ukuran Otomatis), Mastery gabungan, Jejak latihan, dan Highlight disimpan di kode untuk versi berikutnya, tidak tampil di pilihan.
+- Hanya 1 template: Ringkasan. Tidak ada pilihan gaya kartu.
+- Studio berisi kartu Ringkasan plus kustomisasi: periode, tema, nama di kartu, toggle data Utama, Sekunder, Tersier (semua bisa dimatikan), catatan, caption.
+- Template lain (Mastery Subtes, Mastery, Materi, Custom dengan fokus, Jejak latihan, Highlight) disimpan di kode untuk versi berikutnya.
 
 ## Ditinjau lagi di akhir
 - Masukan kkaocarpenter: tambah persentase soal dikerjakan, jangan cuma lama waktu belajar. Maksud persisnya belum jelas (kartu sudah punya jumlah soal dan persen benar). Kalau maksudnya persen terhadap target soal harian, butuh data target yang belum ada.
