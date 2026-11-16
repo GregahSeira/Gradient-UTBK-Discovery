@@ -307,7 +307,7 @@ const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:0,avatar:0,badge:1,level:1,sekolah:1,angkatan:0};
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
  st:{period:'week',tpl:'rapor',preset:'rapor',ratio:'3:4',theme:'ungu',note:'',name:'',open:false,flags:{...DEFF},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
- log:[],fb:{},dense:0};
+ log:[],fb:{},dense:0,snaps:{},pubSlug:''};
 try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
 const D=()=>DATA[S.persona];
 const log=(x)=>S.log.push(x);
@@ -486,8 +486,8 @@ const closeX=()=>`<svg width="16" height="16" viewBox="0 0 14 14" fill="none" st
 
 /* ============ HALAMAN PUBLIK (tautan yang dibagikan) ============ */
 function publicPage(){
- const d=D(),P=d[S.st.period];
- return `<div class="flex min-h-screen flex-col items-center justify-center gap-6 bg-midnight-900 px-4 py-10 text-white"><div class="font-nunito-sans flex items-center gap-2 rounded-full border border-midnight-700 bg-midnight-800 px-4 py-1.5 text-xs font-semibold text-white/70">${shareLink()}</div><div style="zoom:${innerWidth<420?.9:1}">${cardHTML(0)}</div><p class="font-nunito max-w-md text-center text-xl font-extrabold">${esc(dispName(d))} lagi jaga konsistensi belajar UTBK di Gradient.</p><button type="button" data-act="toast" data-v="Daftar di luar prototype" class="${BTN_PRI} !px-8 !py-3">Mulai belajar di Gradient</button><p class="font-nunito-sans text-xs font-semibold text-white/50">Gratis. Satu aktivitas sehari sudah cukup.</p><button type="button" data-act="back-public" class="${FOCUS} font-nunito text-sm font-extrabold text-[#b79cff] underline cursor-pointer">Kembali ke prototype</button></div>`;
+ const sn=S.snaps[S.pubSlug]||freeze(),d=sn.d,s2=sn.st;
+ return `<div class="flex min-h-screen flex-col items-center justify-center gap-6 bg-midnight-900 px-4 py-10 text-white"><div class="font-nunito-sans flex items-center gap-2 rounded-full border border-midnight-700 bg-midnight-800 px-4 py-1.5 text-xs font-semibold text-white/70">gradient.academy/s/${sn.slug}</div><div style="zoom:${innerWidth<420?.9:1}">${cardHTML(sn.dense,sn)}</div><p class="font-nunito max-w-md text-center text-xl font-extrabold">${esc(dispName(d,s2))} lagi jaga konsistensi belajar UTBK di Gradient.</p><button type="button" data-act="toast" data-v="Daftar di luar prototype" class="${BTN_PRI} !px-8 !py-3">Mulai belajar di Gradient</button><p class="font-nunito-sans text-xs font-semibold text-white/50">Gratis. Satu aktivitas sehari sudah cukup.</p><p class="font-nunito-sans text-center text-xs font-semibold text-white/40">Dibagikan ${sn.at}. Isi halaman ini tidak berubah mengikuti data terbaru.</p><button type="button" data-act="back-public" class="${FOCUS} font-nunito text-sm font-extrabold text-[#b79cff] underline cursor-pointer">Kembali ke prototype</button></div>`;
 }
 
 /* ============ LATIHAN SOAL ============ */
@@ -661,7 +661,7 @@ const TPL={
    ${f.materi?`<div style="display:flex;flex-direction:column;gap:5px">${matLines(P,2)}</div>`:''}
    ${stats.length?`<div class="sline">${stats.join('')}</div>`:''}</div>${foot(d,f,s,{noKampus:true})}</div>`}
 };
-const cardHTML=(lv=0)=>{const d=D(),s=S.st;const h=TPL[s.tpl](d,d[s.period],s.flags,s);return lv?h.replace('class="sc ',`class="sc d${lv} `):h};
+const cardHTML=(lv=0,sn)=>{const d=sn?sn.d:D(),s=sn?sn.st:S.st;const h=TPL[s.tpl](d,d[s.period],s.flags,s);return lv?h.replace('class="sc ',`class="sc d${lv} `):h};
 
 /* ============ CAPTION ============ */
 function makeCaption(){
@@ -681,7 +681,9 @@ function makeCaption(){
  return L.join('\n');
 }
 const newSlug=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789',n=new Uint8Array(8);try{crypto.getRandomValues(n)}catch(e){for(let i=0;i<8;i++)n[i]=Math.floor(Math.random()*256)}return [...n].map(x=>a[x%a.length]).join('')};
-const shareLink=()=>'gradient.academy/s/'+(S.st.slug||(S.st.slug=newSlug()));
+const cardFp=()=>JSON.stringify([S.persona,S.st.period,S.st.tpl,S.st.ratio,S.st.theme,S.st.name,S.st.note,S.st.flags,S.st.badge]);
+const shareLink=()=>{const s=S.st,sn=s.slug&&S.snaps[s.slug];if(sn&&sn.fp!==cardFp()){s.slug=newSlug();s.regen=true}if(!s.slug)s.slug=newSlug();return 'gradient.academy/s/'+s.slug};
+function freeze(){shareLink();const s=S.st,sl=s.slug;if(!S.snaps[sl])S.snaps[sl]={slug:sl,fp:cardFp(),at:'15 Nov 2026',dense:S.dense||0,d:JSON.parse(JSON.stringify(D())),st:JSON.parse(JSON.stringify({...s,open:false}))};return S.snaps[sl]}
 
 /* ============ STUDIO BAGIKAN (pola modal "Bagikan streak-mu" dari Figma 1.5.1, diperluas) ============ */
 const closeBtn=(act)=>`<button type="button" data-act="${act}" aria-label="Tutup" class="${FOCUS} flex size-8 shrink-0 items-center justify-center rounded-full text-white/80 hover:bg-white/8 cursor-pointer">${closeX()}</button>`;
@@ -691,7 +693,7 @@ const chIcon=(k)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" s
 function openStudio(origin,period,badge){
  const s=S.st;s.origin=origin;s.period=period;s.badge=badge||null;s.hasSesi=origin==='rapot';
  if(badge){s.flags.badge=1}
- s.slug=newSlug();s.open=false;s.dirty=false;s.caption=makeCaption();log('buka studio dari: '+origin+' ('+period+')');
+ s.slug=newSlug();s.regen=false;s.open=false;s.dirty=false;s.caption=makeCaption();log('buka studio dari: '+origin+' ('+period+')');
  $('#modal').hidden=true;$('#studio').hidden=false;document.body.style.overflow='hidden';$('#studio').innerHTML='';renderStudio();
 }
 function closeStudio(){$('#studio').hidden=true;document.body.style.overflow='';$('#studio').innerHTML=''}
@@ -706,7 +708,7 @@ function renderStudio(){
  $('#sbody').innerHTML=`<div class="flex flex-col items-center gap-2" id="pv"></div>
   <div class="flex flex-col items-center gap-2"><span class="${LBL}">Gaya kartu</span><div class="flex flex-wrap justify-center gap-2">${PRESETS.map(([k,t])=>`<button type="button" data-act="preset" data-v="${k}" aria-pressed="${curPreset(s)===k}" class="${curPreset(s)===k?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div><span class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">${(PRESETS.find(x=>x[0]===curPreset(s))||PRESETS[0])[2]}</span></div>
   <button type="button" data-act="toggle-settings" aria-expanded="${!!s.open}" class="${FOCUS} font-nunito mx-auto flex items-center gap-1.5 text-sm font-extrabold text-[#b79cff] cursor-pointer">Atur isi kartu<span class="${s.open?'rotate-180':''} transition-transform">${svgOf('chevSm')}</span></button>${settings}
-  <div class="flex flex-col items-center gap-1.5"><span id="slugpill" class="font-nunito-sans rounded-full border border-midnight-700 bg-midnight-800 px-4 py-1.5 text-xs font-semibold text-white/80">${shareLink()}</span><span class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">Link acak baru tiap kamu membagikan, tanpa nama atau akunmu.</span></div>
+  <div class="flex flex-col items-center gap-1.5"><span id="slugpill" class="font-nunito-sans rounded-full border border-midnight-700 bg-midnight-800 px-4 py-1.5 text-xs font-semibold text-white/80">${shareLink()}</span><span id="slughint" class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]"></span></div>
   <div class="flex items-start justify-between">${ch('wa','WhatsApp',`id="wa" target="_blank" rel="noopener" data-act="ch-wa"`)}${ch('ig','Instagram')}${ch('tw','X/Twitter',`id="xlink" target="_blank" rel="noopener" data-act="ch-tw"`)}${ch('cp','Salin tautan')}${ch('more','Lainnya...')}</div>
   <div class="flex flex-wrap items-center justify-center gap-3"><button type="button" data-act="save-img" class="${BTN_GRAY} !mb-0.75">Simpan gambar</button><button type="button" data-act="open-public" class="${FOCUS} font-nunito inline-flex items-center gap-1.5 text-sm font-extrabold text-[#b79cff] underline underline-offset-2 cursor-pointer">Lihat halaman publik</button></div>`;
  fitPreview();updateLinks();
@@ -717,7 +719,7 @@ function fitPreview(){
  const pin=$('#pvin');
  let lv=0;for(;lv<=2;lv++){pin.innerHTML=cardHTML(lv);const c=pin.firstElementChild;if(c.scrollHeight<=c.clientHeight+1)break}
  if(lv>2){lv=2;pin.innerHTML=cardHTML(2)}
- S.dense=lv;
+ S.dense=lv;updateLinks();
  const aw=Math.min($('#sbody').clientWidth-8,360),ah=Math.min(innerHeight*(s.open?.34:.5),460);
  pin.style.zoom=Math.min(1,aw/360,ah/RATIO[s.ratio]);
  const card=pin.firstElementChild;
@@ -725,7 +727,7 @@ function fitPreview(){
 }
 addEventListener('resize',()=>{if(!$('#studio').hidden)fitPreview()});
 const shareText=()=>S.st.caption+'\nhttps://'+shareLink();
-function updateLinks(){const x=$('#xlink'),w=$('#wa');if(x)x.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(S.st.caption)+'&url='+encodeURIComponent('https://'+shareLink());if(w)w.href='https://wa.me/?text='+encodeURIComponent(shareText())}
+function updateLinks(){shareLink();const sp=$('#slugpill'),sh=$('#slughint'),sn=S.snaps[S.st.slug];if(sp)sp.textContent=shareLink();if(sh)sh.textContent=sn?'Link ini sudah dibagikan. Isinya dibekukan, tidak ikut berubah.':S.st.regen?'Kartu diubah, jadi link baru dibuat. Link lama tetap menampilkan versi lama.':'Link acak, tanpa nama atau akunmu. Isinya dibekukan saat kamu bagikan.';const x=$('#xlink'),w=$('#wa');if(x)x.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(S.st.caption)+'&url='+encodeURIComponent('https://'+shareLink());if(w)w.href='https://wa.me/?text='+encodeURIComponent(shareText())}
 async function saveBlob(blob,name){
  try{const dl=window.claude?.use?await window.claude.use('downloads'):null;if(dl){await dl.save({filename:name,data:blob});return true}}catch(e){if(e&&e.code==='declined')return false}
  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);return true;
@@ -785,7 +787,7 @@ function fbText(){
 document.addEventListener('input',e=>{
  if(e.target.id==='cname'){S.st.name=e.target.value.slice(0,20);const c=$('#namecnt');if(c)c.textContent=S.st.name.length+'/20';fitPreview();return}
  if(e.target.id==='note'){S.st.note=e.target.value.slice(0,100);const c=$('#notecnt');if(c)c.textContent=S.st.note.length+'/100';fitPreview();return}
- if(e.target.id==='cap'){S.st.caption=e.target.value;S.st.dirty=true;updateX()}
+ if(e.target.id==='cap'){S.st.caption=e.target.value;S.st.dirty=true;updateLinks()}
  if(e.target.id==='fbnote'){S.fb.note=e.target.value;saveFb()}
 });
 function saveFb(){try{localStorage.setItem('gsp-fb',JSON.stringify(S.fb))}catch(e){}}
@@ -810,13 +812,13 @@ document.addEventListener('click',async e=>{
   case 'back':S.page='profil';render();break;
   case 'subtes-open':$('#modal').innerHTML=subtesModal();$('#modal').hidden=false;log('lihat waktu per subtes');break;
   case 'toggle-settings':s.open=!s.open;renderStudio();log('atur isi kartu: '+(s.open?'buka':'tutup'));break;
-  case 'open-public':closeStudio();S.page='public';render();scrollTo(0,0);log('lihat halaman publik');break;
+  case 'open-public':S.pubSlug=freeze().slug;closeStudio();S.page='public';render();scrollTo(0,0);log('lihat halaman publik');break;
   case 'back-public':S.page=S.prevPage||'profil';render();break;
-  case 'ch-wa':log('bagikan ke WhatsApp');break;
-  case 'ch-tw':log('bagikan ke X');break;
-  case 'ch-ig':{const ok=await exportPng();if(ok)toast('Gambar tersimpan. Buka Instagram, lalu pilih dari galeri untuk Story');log('bagikan ke Instagram (simpan gambar)');break}
-  case 'ch-cp':toast(await copyText('https://'+shareLink())?'Tautan tersalin':'Gagal menyalin tautan');log('salin tautan');break;
-  case 'ch-more':{let done=false;try{if(navigator.share){await navigator.share({text:S.st.caption,url:'https://'+shareLink()});done=true}}catch(e){}if(!done){const ok=await exportPng();if(ok)toast('Aplikasi tidak tersedia. Gambar disimpan, kirim manual')}log('bagikan lewat Lainnya');break}
+  case 'ch-wa':freeze();updateLinks();log('bagikan ke WhatsApp');break;
+  case 'ch-tw':freeze();updateLinks();log('bagikan ke X');break;
+  case 'ch-ig':{freeze();updateLinks();const ok=await exportPng();if(ok)toast('Gambar tersimpan. Buka Instagram, lalu pilih dari galeri untuk Story');log('bagikan ke Instagram (simpan gambar)');break}
+  case 'ch-cp':freeze();updateLinks();toast(await copyText('https://'+shareLink())?'Tautan tersalin':'Gagal menyalin tautan');log('salin tautan');break;
+  case 'ch-more':{freeze();updateLinks();let done=false;try{if(navigator.share){await navigator.share({text:S.st.caption,url:'https://'+shareLink()});done=true}}catch(e){}if(!done){const ok=await exportPng();if(ok)toast('Aplikasi tidak tersedia. Gambar disimpan, kirim manual')}log('bagikan lewat Lainnya');break}
   case 'modal-x':$('#modal').hidden=true;break;
   case 'period':s.period=v;restudio();log('periode: '+v);break;
   case 'tpl':s.tpl=v;s.preset=v;restudio();log('gaya: '+v);break;
