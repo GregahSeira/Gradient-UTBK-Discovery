@@ -323,7 +323,7 @@ const SARAN=[{n:'Nabila Putri',sub:"Angkatan '27 (ITB)",h:330},{n:'Rizky Andika'
 const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 
 /* ============ STATE ============ */
-const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:0,avatar:0,badge:1,level:1,sekolah:1,angkatan:0,mpers:0,listmat:0,soalhari:0};
+const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:1,avatar:0,badge:1,level:1,sekolah:1,angkatan:0,mpers:0,listmat:0,soalhari:0};
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
  st:{period:'week',tpl:'rapor',preset:'rapor',ratio:'3:4',theme:'ungu',note:'',name:'',scope:{subtes:[],materi:''},msub:'',mlevel:'subchap',mcount:0,open:false,flags:{...DEFF},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0,snaps:{},pubSlug:''};
@@ -784,7 +784,7 @@ const chIcon=(k)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" s
 function openStudio(origin,period,badge){
  const s=S.st;s.origin=origin;s.period=period;s.badge=badge||null;s.hasSesi=origin==='rapot';
  if(badge){s.flags.badge=1}
- s.tpl='rapor';s.preset='rapor';if(s.ratio!=='9:16')s.ratio='3:4';s.slug=newSlug();s.regen=false;s.open=false;s.dirty=false;s.caption=makeCaption();log('buka studio dari: '+origin+' ('+period+')');
+ s.tpl='rapor';s.preset='rapor';Object.assign(s.flags,{username:1,durasi:1,soal:1,benar:1,growth:1});if(s.ratio!=='9:16')s.ratio='3:4';s.slug=newSlug();s.regen=false;s.open=false;s.dirty=false;s.caption=makeCaption();log('buka studio dari: '+origin+' ('+period+')');
  $('#modal').hidden=true;$('#studio').hidden=false;document.body.style.overflow='hidden';$('#studio').innerHTML='';renderStudio();
 }
 function closeStudio(){$('#studio').hidden=true;document.body.style.overflow='';$('#studio').innerHTML=''}
@@ -794,7 +794,8 @@ function renderStudio(){
  const seg=(act,items,cur)=>`<div role="group" class="flex w-fit gap-1 rounded-full border-2 border-midnight-850 bg-midnight-900 p-1">${items.map(([k,t])=>k===cur?`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="true" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white bg-surface-brand mb-1 px-4 py-2 text-sm leading-5 tracking-[-0.28px] shadow-[0_4px_0_var(--accent-off-purple)] cursor-pointer">${t}</button>`:`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="false" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white border border-midnight-700 bg-midnight-800 px-3 py-2.5 text-xs leading-4.5 hover:bg-midnight-700 cursor-pointer">${t}</button>`).join('')}</div>`;
  const tile=(act,k,t,x,on)=>`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="${on}" class="${FOCUS} rounded-xl border-2 p-3 text-left transition-colors cursor-pointer ${on?'border-brand-300 bg-[rgba(178,133,240,0.18)]':'border-midnight-850 bg-midnight-800/40 hover:bg-midnight-800'}"><span class="font-nunito block text-[15px] font-extrabold text-white">${t}</span><span class="font-nunito-sans block text-xs font-semibold text-white/60">${x}</span></button>`;
  const cust=true;
- const chip=(k,t)=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`;
+ const LOCK=['username','durasi','soal','benar','growth'];
+ const chip=(k,t)=>LOCK.includes(k)?`<span class="${CAT_OFF} !cursor-default !opacity-80 flex items-center gap-1.5" title="Selalu tampil"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t}</span>`:`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`;
  const UTAMA=[['username','Nama'],['durasi','Waktu belajar'],['soal','Jumlah soal'],['kampus','PTN & prodi impian']];
  const sel=s.scope.subtes,mats0=(D()[s.period].materi||[]);
  const focusUI=`<div class="flex flex-col gap-2"><span class="${LBL}">Fokus (opsional)</span><div class="flex flex-wrap gap-2">${Object.keys(SUB).map(k=>`<button type="button" data-act="scope-sub" data-v="${k}" title="${SUB[k].n}" aria-pressed="${sel.includes(k)}" class="${sel.includes(k)?CAT_ON:CAT_OFF}">${k}</button>`).join('')}</div>${sel.length===1?`<select id="scmat" aria-label="Materi" class="${FOCUS} font-nunito-sans h-11 w-full rounded-xl border-2 border-midnight-700 bg-midnight-800 px-3 text-sm font-semibold text-white"><option value="">Semua materi di ${sel[0]}</option>${mats0.filter(x=>x.k===sel[0]).map(x=>`<option value="${x.k}|${esc(x.n)}"${s.scope.materi===x.k+'|'+x.n?' selected':''}>${esc(x.n)}</option>`).join('')}</select>`:''}<p class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">${sel.length?'Kartu hanya memuat data subtes yang dipilih.':'Kosong berarti semua subtes. Pilih satu subtes untuk fokus ke satu materi.'}${sel.length?` <button type="button" data-act="scope-clear" class="${FOCUS} font-nunito font-extrabold text-[#b79cff] underline cursor-pointer">Hapus fokus</button>`:''}</p></div>`;
