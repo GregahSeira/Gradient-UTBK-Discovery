@@ -20,6 +20,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 ## Aset baru (eksploratif, bukan dari UI asli)
 - Kartu "Progress belajar" (hari ini dan minggu ini) di tab Ringkasan, masing-masing dengan tombol Bagikan
 - Tombol "Bagikan progress" di tab profil, kartu ajakan di Habit, ikon share di badge Achievement, halaman hasil sesi
+- Kartu share default: portrait 3:4 (360x480, ekspor 1080x1440) layout rapor ala referensi Alternatifa: waktu belajar dengan target, kubus soal dan akurasi, waktu per subtes, tingkat kesulitan beserta akurasi per level.
 - Studio share: periode, 4 gaya kartu, 3 rasio, toggle data, caption, link, privasi, share ke X
 - Panel kontrol prototype dan form masukan
 
