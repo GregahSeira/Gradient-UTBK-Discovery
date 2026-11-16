@@ -30,6 +30,12 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Kustomisasi ringan (opsi B dari masukan studytwt): 3 tema kartu (Ungu default, Hitam putih, Terang), toggle foto profil di Tersier (default mati), catatan singkat maksimal 100 karakter (sekitar dua baris di kartu). Isi kartu otomatis dirapatkan kalau catatan atau avatar bikin kartu penuh.
 - Panel kontrol prototype dan form masukan
 
+## Keputusan yang ditunda (untuk PRD, setelah masukan studytwt)
+- Apakah ada data yang dikunci, dan apakah PTN impian pindah ke Sekunder.
+- Isi caption bawaan: hashtag merek, kalimat penutup otomatis.
+- Fitur tarik atau hapus link yang sudah dibagikan.
+- Data contoh yang harus dihitung sungguhan: delta mastery, skill naik, banding minggu lalu, soal per subtes, nama sekolah.
+
 ## Catatan teknis
 - Ekspor PNG 1080px memakai SVG foreignObject dengan font Nunito/Urbanist yang ditanam (html2canvas jadi cadangan).
 - Semua data contoh. Link profil publik dan privasi link hanya simulasi UI.
