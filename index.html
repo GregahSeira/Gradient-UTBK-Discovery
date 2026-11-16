@@ -226,6 +226,7 @@ body{font-family:'Nunito',system-ui,sans-serif;color:#fff;-webkit-font-smoothing
 .c-rpr .mt{display:grid;grid-template-columns:32px 1fr auto auto;gap:6px;align-items:center}.c-rpr .mt .sn{font-size:12px;font-weight:800;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.c-rpr .mt .tm{font-size:12px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}.c-rpr .mt .so{font-size:11px;font-weight:700;color:var(--f65);text-align:right;min-width:44px}
 .c-rpr .lgd{display:flex;flex-wrap:wrap;gap:2px 9px;font-size:11px;font-weight:700;color:var(--f8)}.c-rpr .lgd em{display:inline-block;width:7px;height:7px;border-radius:99px;margin-right:4px}
 .c-rpr .fcs{font-size:11px;font-weight:800;color:var(--ac);background:var(--g1);border-radius:99px;padding:2px 9px;line-height:1.3}
+.c-msb .rw{position:relative;width:180px;height:180px;margin:2px auto}.c-msb .ring{width:100%;height:100%;display:block}.c-msb .rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.c-msb .rc b{font-family:'Nunito',sans-serif;font-size:44px;font-weight:900;line-height:1}.c-msb .rc span{font-size:12px;font-weight:700;color:var(--f7)}.c-msb.d1 .rw{width:150px;height:150px}.c-msb.d1 .rc b{font-size:38px}.c-msb.d2 .rw{width:124px;height:124px}.c-msb.d2 .rc b{font-size:32px}
 .c-rpr .wm{color:var(--fg)}.c-rpr .wm .i{color:#fff}.c-rpr .kt b{color:#fff}.c-rpr.th-terang .lg2 i{background:var(--ac)}.c-rpr.th-terang .hero .hv b{color:#fff}
 .c-rpr.th-terang .hero .dl,.c-rpr.th-terang .hero .hs b{color:#86efac!important}
 .c-rpr.th-hitam .hero{background:linear-gradient(135deg,#fafafa,#d4d4d8);box-shadow:0 3px 0 #71717a;color:#0b0b0d}
@@ -324,7 +325,7 @@ const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 /* ============ STATE ============ */
 const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:0,avatar:0,badge:1,level:1,sekolah:1,angkatan:0,mpers:0,listmat:0,soalhari:0};
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
- st:{period:'week',tpl:'rapor',preset:'rapor',ratio:'3:4',theme:'ungu',note:'',name:'',scope:{subtes:[],materi:''},open:false,flags:{...DEFF},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
+ st:{period:'week',tpl:'rapor',preset:'rapor',ratio:'3:4',theme:'ungu',note:'',name:'',scope:{subtes:[],materi:''},msub:'',open:false,flags:{...DEFF},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0,snaps:{},pubSlug:''};
 try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
 const D=()=>DATA[S.persona];
@@ -539,7 +540,7 @@ const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],[
 const LOCKED=['Nama','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
 const SEKUNDER=[['streak','Streak'],['growth','Perkembangan mastery'],['mpers','Mastery per subtes'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
 const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan'],['benar','Jumlah soal benar'],['avatar','Foto profil'],['listmat','Materi yang dipelajari'],['soalhari','Soal per hari']];
-const PRESETS=[['rapor','Ringkasan','Waktu, soal, mastery, dan subtes dalam satu kartu'],['mastery','Mastery','Mastery per subtes dan data latihan soal'],['materi','Materi','Data belajar materi'],['custom','Custom','Pilih data, tingkatan, subtes, atau materi sendiri']];
+const PRESETS=[['rapor','Ringkasan','Waktu, soal, mastery, dan subtes dalam satu kartu'],['msub','Mastery Subtes','Satu subtes, grafik besar']];
 const curPreset=(s)=>s.preset==='custom'?'custom':s.tpl;
 const TPLS=[['rapor','Ringkas','Semua data dalam satu kartu'],['mastery','Mastery naik','Subtes dan skill yang naik'],['latsol','Jejak latihan','Kesulitan dan tren soal'],['cerita','Highlight','Satu kalimat per capaian']];
 const wm='<div class="wm">Gradient<span class="o"><span class="i">UTBK</span></span></div>';
@@ -583,6 +584,7 @@ function applyScope(d,P,s){
  const lbl=one?`${one.k} · ${one.n}`:sel.length===1?SUB[sel[0]].n:sel.join(' · ');
  return [{...d,mastery:mast},P2,{lbl,one,single:!one&&sel.length===1,sel}];
 }
+const msubKey=(d,P,s)=>{const md=P.mdel||{},ks=Object.keys(d.mastery);return ks.includes(s.msub)?s.msub:ks.slice().sort((a,b)=>(md[b]||0)-(md[a]||0)||d.mastery[b]-d.mastery[a])[0]};
 const FCS=(sc)=>sc?`<div class="idrow"><span class="fcs">Fokus: ${esc(sc.lbl)}</span></div>`:'';
 function MBLK(d,P){
  const md=P.mdel||{},per=P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'sesi ini';
@@ -671,6 +673,15 @@ const TPL={
   const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),tt=dif.reduce((a,[,[t]])=>a+t,0)||1;
   const kes=f.kesulitan?`<div class="blk"><div class="bh"><span>Tingkat kesulitan</span></div><div class="kb">${dif.map(([n,[t]])=>`<i style="width:${t/tt*100}%;background:${DIFFC[n]}"></i>`).join('')}</div><div class="dg">${dif.map(([n,[t,b]])=>`<div><b><em style="background:${DIFFC[n]}"></em>${n}</b><span>${t} soal</span><span>${pct(b,t)}% benar</span></div>`).join('')||'<div>Belum ada soal</div>'}</div></div>`:'';
   return `<div class="sc c-rpr ${THC(s)}" style="height:${HH(s)}"><div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div>${NM(d,f,s)}${FCS(sc)}${kam}<div class="bd">${f.durasi?hero:''}${tgrid}${grow}${mpers}${mat}${lm}${kes}${sh}</div>${newm}${footR(d,f,s)}${NOTE(s)}</div>`},
+ msub:(d,P,f,s)=>{
+  const md=P.mdel||{},k=msubKey(d,P,s);
+  const cur=d.mastery[k]||0,dl=md[k]||0,from=Math.max(cur-dl,0),c=SUB[k].c,per=P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'sesi ini';
+  const R=74,C=2*Math.PI*R,arc=(a,b,col,w)=>`<circle cx="90" cy="90" r="${R}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${Math.max(b-a,0)/100*C} ${C}" stroke-dashoffset="${-a/100*C}" transform="rotate(-90 90 90)"/>`;
+  const ring=`<svg class="ring" viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="${R}" fill="none" stroke="var(--g1)" stroke-width="18"/>${arc(0,from,c,18)}${dl>0?arc(from,cur,'var(--up)',18):''}</svg><div class="rc"><b>${cur}%</b><span>${dl>0?`dari ${from}%`:'mastery'}</span></div>`;
+  const st=P.subtes.find(x=>x.k===k)||{sec:0,soal:0},bn=(P.materi||[]).filter(x=>x.k===k).reduce((a,x)=>a+x.benar,0);
+  const sk=(P.skills||[]).filter(x=>x.k===k&&x.to>x.from).sort((a,b)=>(b.to-b.from)-(a.to-a.from)).slice(0,2);
+  const hl=dl>0?`Mastery ${k} naik <em>+${dl}%</em>`:`Mastery ${k} ${cur}%`;
+  return `<div class="sc c-rpr ${THC(s)} c-msb" style="height:${HH(s)}">${HD(d,P,f,s)}<div class="hlw"><div class="hl">${hl}</div><div class="hs2">${SUB[k].n} · ${per}</div></div><div class="bd"><div class="rw">${ring}</div><div class="tl3" style="grid-template-columns:1fr 1fr"><div class="tl"><span class="tk">Soal ${k}</span><b>${st.soal}</b>${st.soal&&bn?`<small>${pct(bn,st.soal)}% benar</small>`:''}</div><div class="tl"><span class="tk">Waktu belajar ${k}</span><b>${fmtDur(st.sec)}</b></div></div>${sk.length?`<div class="blk"><div class="bh"><span>Materi yang naik</span></div>${sk.map(x=>`<div class="sk2"><span class="stg" style="--c:${c}">${k}</span><span class="sn">${esc(x.name)}</span><span class="sv">${x.from}% → ${x.to}%</span>${dltG(x.to-x.from,v=>'+'+v+'%')}</div>`).join('')}</div>`:''}</div>${f.streak?`<div class="ft" style="gap:5px"><span class="cpr">${px('flame',14)}${d.streak} hari streak</span></div>`:''}${NOTE(s)}</div>`},
  mastery:(d,P,f,s)=>{
   const mb=MBLK(d,P),rows=mb.rows,up=rows.filter(r=>r.dl>0),best=up[0];
   const hl=up.length?`Mastery naik di <em>${up.length}</em> dari ${rows.length} subtes`:'Belum ada kenaikan mastery';
@@ -746,7 +757,7 @@ function makeCaption(){
  return L.join('\n');
 }
 const newSlug=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789',n=new Uint8Array(8);try{crypto.getRandomValues(n)}catch(e){for(let i=0;i<8;i++)n[i]=Math.floor(Math.random()*256)}return [...n].map(x=>a[x%a.length]).join('')};
-const cardFp=()=>JSON.stringify([S.persona,S.st.period,S.st.tpl,S.st.ratio,S.st.theme,S.st.name,S.st.note,S.st.flags,S.st.badge,S.st.preset,S.st.scope]);
+const cardFp=()=>JSON.stringify([S.persona,S.st.period,S.st.tpl,S.st.ratio,S.st.theme,S.st.name,S.st.note,S.st.flags,S.st.badge,S.st.preset,S.st.scope,S.st.msub]);
 const shareLink=()=>{const s=S.st,sn=s.slug&&S.snaps[s.slug];if(sn&&sn.fp!==cardFp()){s.slug=newSlug();s.regen=true}if(!s.slug)s.slug=newSlug();return 'gradient.academy/s/'+s.slug};
 function freeze(){shareLink();const s=S.st,sl=s.slug;if(!S.snaps[sl])S.snaps[sl]={slug:sl,fp:cardFp(),at:'15 Nov 2026',dense:S.dense||0,d:JSON.parse(JSON.stringify(D())),st:JSON.parse(JSON.stringify({...s,open:false}))};return S.snaps[sl]}
 
@@ -776,7 +787,7 @@ function renderStudio(){
  const ch=(k,l,extra='')=>`<div class="flex w-[74px] flex-col items-center gap-3"><${extra?'a '+extra:'button type="button" data-act="ch-'+k+'"'} class="${FOCUS} flex size-10 items-center justify-center rounded-full border border-midnight-700 bg-midnight-800 text-white transition-colors hover:bg-midnight-700 cursor-pointer" aria-label="${l}">${chIcon(k==='wa'?'wa':k==='ig'?'ig':k==='tw'?'x':k==='cp'?'link':'more')}</${extra?'a':'button'}><span class="font-nunito text-[13px] leading-tight font-bold text-white/90">${l}</span></div>`;
  if(!$('#studio .studio-dlg')){$('#studio').innerHTML=`<div class="studio-dlg ${DLG} sm:max-w-130" role="dialog" aria-label="Bagikan progress belajarmu"><div class="flex items-center justify-between px-6 pt-6"><h2 class="font-nunito text-[22px] leading-tight font-extrabold">Bagikan progress belajarmu</h2>${closeBtn('close-studio')}</div><div class="flex min-h-0 flex-col gap-6 overflow-y-auto p-6" id="sbody"></div></div>`}
  $('#sbody').innerHTML=`<div class="flex flex-col items-center gap-2" id="pv"></div>
-  <div class="flex flex-col items-center gap-2"><span class="${LBL}">Gaya kartu</span><div class="flex flex-wrap justify-center gap-2">${PRESETS.map(([k,t])=>`<button type="button" data-act="preset" data-v="${k}" aria-pressed="${curPreset(s)===k}" class="${curPreset(s)===k?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div><span class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">${(PRESETS.find(x=>x[0]===curPreset(s))||PRESETS[0])[2]}</span></div>
+  <div class="flex flex-col items-center gap-2"><span class="${LBL}">Gaya kartu</span><div class="flex flex-wrap justify-center gap-2">${PRESETS.map(([k,t])=>`<button type="button" data-act="preset" data-v="${k}" aria-pressed="${curPreset(s)===k}" class="${curPreset(s)===k?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div><span class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">${(PRESETS.find(x=>x[0]===curPreset(s))||PRESETS[0])[2]}</span>${s.tpl==='msub'?`<div class="flex flex-wrap justify-center gap-2">${Object.keys(SUB).map(k=>{const on=k===msubKey(D(),D()[s.period],s);return `<button type="button" data-act="msub" data-v="${k}" title="${SUB[k].n}" aria-pressed="${on}" class="${on?CAT_ON:CAT_OFF}">${k}</button>`}).join('')}</div>`:''}</div>
   <button type="button" data-act="toggle-settings" aria-expanded="${!!s.open}" class="${FOCUS} font-nunito mx-auto flex items-center gap-1.5 text-sm font-extrabold text-[#b79cff] cursor-pointer">Atur isi kartu<span class="${s.open?'rotate-180':''} transition-transform">${svgOf('chevSm')}</span></button>${settings}
   <div class="flex flex-col items-center gap-1.5"><span id="slugpill" class="font-nunito-sans rounded-full border border-midnight-700 bg-midnight-800 px-4 py-1.5 text-xs font-semibold text-white/80">${shareLink()}</span><span id="slughint" class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]"></span></div>
   <div class="flex items-start justify-between">${ch('wa','WhatsApp',`id="wa" target="_blank" rel="noopener" data-act="ch-wa"`)}${ch('ig','Instagram')}${ch('tw','X/Twitter',`id="xlink" target="_blank" rel="noopener" data-act="ch-tw"`)}${ch('cp','Salin tautan')}${ch('more','Lainnya...')}</div>
@@ -831,7 +842,7 @@ async function exportPng(quiet){
 const FB=[
  {k:'where',q:'Biasanya kamu update progress belajar di mana?',multi:1,o:['X / Twitter','Instagram Story','WhatsApp Status','TikTok','Grup belajar / Discord','Nggak pernah update']},
  {k:'data',q:'Dari data di kartu, mana yang kamu pasti mau tampilkan?',multi:1,o:['Waktu belajar','Banding minggu lalu','Soal dan akurasi','Streak dan hari aktif','Mastery naik','Skill atau materi baru','Waktu per subtes','Tingkat kesulitan','PTN impian','Badge','Level dan EXP','Nama sekolah']},
- {k:'tpl',q:'Tampilan kartu mana yang paling mau kamu posting?',o:['Ringkasan','Mastery','Materi','Custom','Belum ada yang cocok']},
+ {k:'tpl',q:'Tampilan kartu mana yang paling mau kamu posting?',o:['Ringkasan','Mastery Subtes','Belum ada yang cocok']},
  {k:'tema',q:'Tema kartu mana yang paling kamu pakai?',o:['Gelap ungu','Hitam putih','Terang','Mau tema lain']},
  {k:'cardlook',q:'Tampilan kartunya menurut kamu...',o:['Mau banget diposting','Oke, tapi perlu diubah','Kurang menarik','Nggak bakal diposting']},
  {k:'freq',q:'Seberapa sering kamu bakal share progress?',o:['Tiap hari','Tiap minggu','Sesekali','Nggak bakal']},
@@ -894,6 +905,7 @@ document.addEventListener('click',async e=>{
   case 'period':s.period=v;restudio();log('periode: '+v);break;
   case 'tpl':s.tpl=v;s.preset=v;restudio();log('gaya: '+v);break;
   case 'scope-sub':{const a=s.scope.subtes;s.scope.subtes=a.includes(v)?a.filter(x=>x!==v):a.concat(v);if(s.scope.subtes.length!==1)s.scope.materi='';restudio();log('fokus subtes: '+s.scope.subtes.join(','));break}
+  case 'msub':s.msub=v;restudio();log('subtes: '+v);break;
   case 'scope-clear':s.scope={subtes:[],materi:''};restudio();log('fokus dihapus');break;
   case 'preset':{s.preset=v;s.tpl=v==='custom'?'rapor':v;s.ratio=v==='custom'?'auto':'3:4';if(v==='custom')s.open=true;else{const kp=s.flags.kampus,sk=s.flags.sekolah;s.flags={...DEFF,kampus:kp,sekolah:sk};s.badge=null}restudio();log('gaya: '+v);break}
   case 'theme':s.theme=v;renderStudio();log('tema: '+v);break;

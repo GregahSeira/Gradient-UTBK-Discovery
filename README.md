@@ -40,6 +40,11 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Fitur tarik atau hapus link yang sudah dibagikan.
 - Data contoh yang harus dihitung sungguhan: delta mastery, skill naik, banding minggu lalu, soal per subtes, nama sekolah.
 
+## Scope MVP (V1)
+- Hanya 2 gaya kartu: Ringkasan (default) dan Mastery Subtes.
+- Mastery Subtes: pilih 1 subtes (bawaan: subtes yang paling naik). Grafik cincin besar: persen mastery di tengah, warna subtes untuk nilai sebelumnya, hijau untuk bagian yang naik, teks "dari X%". Di bawahnya soal dan persen benar subtes itu, waktu belajar subtes itu, maksimal 2 materi yang naik, dan streak.
+- Materi, Custom (fokus subtes atau materi, ukuran Otomatis), Mastery gabungan, Jejak latihan, dan Highlight disimpan di kode untuk versi berikutnya, tidak tampil di pilihan.
+
 ## Ditinjau lagi di akhir
 - Masukan kkaocarpenter: tambah persentase soal dikerjakan, jangan cuma lama waktu belajar. Maksud persisnya belum jelas (kartu sudah punya jumlah soal dan persen benar). Kalau maksudnya persen terhadap target soal harian, butuh data target yang belum ada.
 - Masukan njanjanja26: mapel sulit ditandai merah lalu tampil kalau ada peningkatan. Dibatalkan sementara karena risiko kartu terlihat negatif untuk mastery rendah tanpa peningkatan.
