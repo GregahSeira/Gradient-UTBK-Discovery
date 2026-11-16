@@ -274,7 +274,7 @@ const DATA={
  rajin:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'The Undefeated',school:'SMAN 3 Bandung',join:2026,streak:7,exp:1240,level:8,
   kampus:{ptn:'Institut Teknologi Bandung',short:'ITB',prodi:'Teknik Informatika'},reminder:'19.00',
   mastery:{PU:34,PPU:61,PBM:45,PK:52,LBI:48,LBE:36,PM:18},
-  days:[80,115,40,95,14,138,115].map(m),lastWeekSec:m(517),sesiAvgSec:m(11),
+  days:[80,115,40,95,14,138,115].map(m),lastWeekSec:m(517),sesiAvgSec:m(11),totalActive:48,
   hof:[{name:'Master PPU',date:'Diraih 12 Sep',col:10},{name:'Streak 7 Hari',date:'Diraih 28 Sep',col:0},{name:'Penjelajah Nalar',date:'Diraih 20 Sep',col:20}],
   badges:[
    {id:'penakluk',name:'Penakluk Subtes',desc:'Kuasai 3 subtes hingga 100% (Hadiah: Border Emas)',cur:2,max:3,col:17,sec:'run'},
@@ -294,7 +294,7 @@ const DATA={
    diff:{Mudah:[12,11],Sedang:[13,10],Sulit:[6,3]},mastery:{avg:42,delta:2},skillUp:{name:'Eksponen',k:'PK',delta:6}},
   sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',mdel:{PK:6},skills:[{k:'PK',name:'Pangkat negatif',from:24,to:48},{k:'PK',name:'Pangkat pecahan',from:40,to:55},{k:'PK',name:'Bentuk akar',from:63,to:63},{k:'PK',name:'Persamaan eksponen',from:73,to:71}],levelUp:[],sec:m(14),soal:20,benar:16,materiCount:1,
    subtes:[{k:'PK',sec:m(14),soal:20,topics:['Eksponen']}],diff:{Mudah:[6,6],Sedang:[9,7],Sulit:[5,3]},mastery:{label:'Eksponen',avg:68,delta:6},skillUp:{name:'Pangkat negatif',k:'PK',delta:24}}},
- baru:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'Pendatang Baru',school:'SMAN 3 Bandung',join:2026,streak:1,exp:85,level:1,
+ baru:{totalActive:1,user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'Pendatang Baru',school:'SMAN 3 Bandung',join:2026,streak:1,exp:85,level:1,
   kampus:{ptn:'Institut Teknologi Bandung',short:'ITB',prodi:'Teknik Informatika'},reminder:null,
   mastery:{PU:0,PPU:0,PBM:0,PK:6,LBI:0,LBE:0,PM:9},
   days:[0,0,0,0,0,0,52],lastWeekSec:0,hof:[],
@@ -669,7 +669,7 @@ const TPL={
   const tl=(k,v,u,sm,sc)=>`<div class="tl"><span class="tk">${k}</span><b>${v}${u?`<u${u[0]==='/'?' class="sl"':''}>${u}</u>`:''}</b>${sm?`<small${sc?` style="color:${sc}"`:''}>${sm}</small>`:''}</div>`;
   const tiles=[];
   if(f.streak)tiles.push(`<div class="tl stk"><span class="tk">Streak</span><b>${d.streak}<u> hari</u></b><small class="sks">berturut-turut</small><span class="fi">${px('flame',40)}</span></div>`);
-  if(f.aktif)tiles.push(tl('Hari aktif',act,'/7','minggu ini'));
+  if(f.aktif)tiles.push(tl('Hari aktif',d.totalActive||act,' hari','total di Gradient'));
   if(f.soal)tiles.push(tl('Soal dikerjakan',P.soal,'',f.benar?`${P.benar} benar · ${acc}%`:`di ${P.subtes.filter(x=>x.soal>0).length} subtes`,f.benar?accc:''));
   const tgrid=tiles.length?`<div class="tl3" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:'';
   let grow='',newm='';
@@ -775,7 +775,7 @@ function makeCaption(){
  if(f.materi&&P.subtes.length)L.push(`- subtes: ${P.subtes.map(x=>x.k).join(', ')}`);
  if(s.tpl==='materi'&&(P.materi||[]).length){const tm=P.materi.slice().sort((a,b)=>b.sec-a.sec).slice(0,3);L.push(`- ${P.materi.length} materi, terlama: ${tm.map(x=>x.n).join(', ')}`)}
  if(f.streak)L.push(`- streak ${d.streak} hari`);
- if(f.aktif)L.push(`- aktif ${act}/7 hari`);
+ if(f.aktif)L.push(`- total ${d.totalActive||act} hari aktif di Gradient`);
  if(f.growth){const up=(P.skills||[]).filter(x=>x.to>x.from).sort((a,b)=>(b.to-b.from)-(a.to-a.from)).slice(0,3);if(up.length){L.push('- mastery naik:');up.forEach(x=>L.push(`  ${x.name} ${x.from}% ke ${x.to}% (+${x.to-x.from}%)`))}}
  if(f.kesulitan&&P.diff.Sulit[0])L.push(`- ${P.diff.Sulit[0]} soal level sulit, ${P.diff.Sulit[1]} bener`);
  if(f.level)L.push(`- Lv ${d.level}, ${rp(d.exp)} EXP`);
