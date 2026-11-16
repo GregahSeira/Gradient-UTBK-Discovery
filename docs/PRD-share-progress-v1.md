@@ -2,7 +2,7 @@
 
 V1 = satu kartu Ringkasan yang bisa dibagikan dari profil ke studytwt, isinya effort (waktu, soal) dan hasilnya (mastery naik per materi).
 
-Dokumen ini berisi scope produk dan aturan data, bukan instruksi teknis. Prototype: https://claude.ai/artifact/F3E5PENi3heTvgtLgR5nS2. Semua angka di prototype = data contoh.
+Isinya scope produk dan aturan data. Prototype: https://claude.ai/artifact/F3E5PENi3heTvgtLgR5nS2. Semua angka di prototype = data contoh.
 
 ## Masalah dan target
 
@@ -62,8 +62,8 @@ Section Progress belajar di profil: tab Hari ini dan 7 hari terakhir, 4 kotak (w
 |---|---|---|---|
 | [REKOMENDASI] Waktu, soal, mastery dikunci | Tanpa itu kartu tidak punya cerita effort ke hasil | Semua data bisa dimatikan | Kartu bisa kosong |
 | [REKOMENDASI] Link acak anonim | Akun anonim tidak bocor identitas | Link ke profil, caption tanpa link | Bocor identitas, atau hilang traffic balik |
-| [REKOMENDASI] 1 template | Cuma Ringkasan yang sesuai ekspektasi setelah eksplor 4 template | Ringkasan + 2 preset + Custom | Kompleks, membuat user dan tim bingung |
-| [REKOMENDASI] Tanpa penanda "lemah" merah | Mastery rendah tanpa kenaikan membuat user batal share | Subtes di bawah 20% merah | Kartu terlihat negatif |
+| [REKOMENDASI] 1 template | Dari 4 template yang dieksplor, cuma Ringkasan yang lolos review PM | Ringkasan + 2 preset + Custom | Kompleks, membuat user dan tim bingung |
+| [REKOMENDASI] Tanpa penanda "lemah" merah | [INFERENSI] Mastery rendah tanpa kenaikan membuat user batal share | Subtes di bawah 20% merah | Kartu terlihat negatif |
 
 ## Kebutuhan data
 
