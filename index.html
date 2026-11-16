@@ -812,13 +812,16 @@ function fitPreview(){
  const fits=()=>{const c=pin.firstElementChild;return c.scrollHeight<=c.clientHeight+1};
  S.nr=s.mcount||99;pin.innerHTML=cardHTML(0);const tot=pin.querySelectorAll('.mr2').length;
  if(!s.mcount&&!fits()&&tot>1){for(S.nr=tot-1;S.nr>1;S.nr--){pin.innerHTML=cardHTML(0);if(fits())break}}
- let lv=0;for(;lv<=3;lv++){pin.innerHTML=cardHTML(lv);if(fits())break}
- if(lv>3){lv=3;pin.innerHTML=cardHTML(3)}
+ const tryFit=()=>{let l=0;for(;l<=2;l++){pin.innerHTML=cardHTML(l);if(fits())return l}return 3};
+ if(s.autoStory&&s.ratio==='9:16'){s.ratio='3:4';if(tryFit()===3){s.ratio='9:16'}else s.autoStory=false}
+ let lv=tryFit();
+ if(lv===3&&s.mcount&&s.ratio==='3:4'){s.ratio='9:16';s.autoStory=true;lv=tryFit()}
+ pin.innerHTML=cardHTML(lv);
  S.dense=lv;updateLinks();
  const aw=Math.min($('#sbody').clientWidth-8,360),ah=Math.min(innerHeight*(s.open?.34:.5),460);
  pin.style.zoom=Math.min(1,aw/360,ah/(s.ratio==='auto'||lv>=3?pin.firstElementChild.offsetHeight:RATIO[s.ratio]));
  const card=pin.firstElementChild;
- $('#pvwarn').innerHTML=card.scrollHeight>card.clientHeight+2?`<p class="font-nunito rounded-xl bg-[#3a2a0a] px-3 py-2 text-[13px] font-bold text-[#fde68a]">Isinya terlalu banyak untuk ukuran ini. Matikan beberapa data atau pilih ukuran lebih tinggi.</p>`:(lv>=3?`<p class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">Teks dikecilkan dan kartu dipanjangkan sedikit supaya semua data muat</p>`:lv?`<p class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">Teks dikecilkan otomatis biar muat</p>`:'');
+ $('#pvwarn').innerHTML=(s.autoStory?`<p class="font-nunito-sans text-center text-xs font-semibold text-[#b79cff]">Ukuran otomatis jadi 9:16 (Story) supaya ${s.mcount} baris muat</p>`:'')+(card.scrollHeight>card.clientHeight+2?`<p class="font-nunito rounded-xl bg-[#3a2a0a] px-3 py-2 text-[13px] font-bold text-[#fde68a]">Isinya terlalu banyak untuk ukuran ini. Matikan beberapa data atau pilih ukuran lebih tinggi.</p>`:(lv>=3?`<p class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">Teks dikecilkan dan kartu dipanjangkan sedikit supaya semua data muat</p>`:lv?`<p class="font-nunito-sans text-center text-xs font-semibold text-[#9e98b3]">Teks dikecilkan otomatis biar muat</p>`:''));
 }
 addEventListener('resize',()=>{if(!$('#studio').hidden)fitPreview()});
 const shareText=()=>S.st.caption+'\nhttps://'+shareLink();
@@ -924,7 +927,7 @@ document.addEventListener('click',async e=>{
   case 'scope-clear':s.scope={subtes:[],materi:''};restudio();log('fokus dihapus');break;
   case 'preset':{s.preset=v;s.tpl=v==='custom'?'rapor':v;s.ratio=v==='custom'?'auto':'3:4';if(v==='custom')s.open=true;else{const kp=s.flags.kampus,sk=s.flags.sekolah;s.flags={...DEFF,kampus:kp,sekolah:sk};s.badge=null}restudio();log('gaya: '+v);break}
   case 'theme':s.theme=v;renderStudio();log('tema: '+v);break;
-  case 'ratio':s.ratio=v;restudio();log('ukuran: '+v);break;
+  case 'ratio':s.ratio=v;s.autoStory=false;restudio();log('ukuran: '+v);break;
   case 'flag':s.flags[v]=s.flags[v]?0:1;if(v==='level')s.flags.badge=s.flags.level;if(v==='badge'&&!s.flags.badge)s.badge=null;restudio();log('data '+v+': '+(s.flags[v]?'on':'off'));break;
   case 'cap-reset':s.dirty=false;s.caption=makeCaption();renderStudio();break;
   case 'priv':s.privacy=v;renderStudio();log('privasi link: '+v);break;
