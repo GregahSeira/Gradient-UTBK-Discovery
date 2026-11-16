@@ -53,7 +53,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 
 ### Section Progress belajar (profil, tab Ringkasan)
 - 2 tab: Hari ini dan 7 hari terakhir (tab 30 hari dihapus).
-- Ringkasan 2x2: Waktu belajar (selisih dari rerata), Soal dikerjakan (% benar), Streak (Hari ini) atau Hari aktif x/7 (7 hari), Mastery naik.
+- Ringkasan 2x2: Waktu belajar (selisih dari rerata), Rerata waktu harian/mingguan, Soal dikerjakan (% benar), Rerata soal harian/mingguan. Streak dan Mastery naik dihapus dari section ini. Kalau riwayat belum cukup, rerata tampil "–". Rerata soal mingguan (158) data contoh.
 - Baris "Paling banyak: subtes (waktu)" dan link "Lihat selengkapnya di Habit" (rentang grafik Habit ikut 7 hari).
 - Tombol Bagikan di judul membuka kartu harian atau mingguan sesuai tab.
 
