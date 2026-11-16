@@ -245,7 +245,7 @@ const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 
 /* ============ STATE ============ */
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
- st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:1,growth:1,kesulitan:0,badge:0,level:0,sekolah:0,angkatan:0},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
+ st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,badge:0,level:0,sekolah:0,angkatan:0},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0};
 try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
 const D=()=>DATA[S.persona];
@@ -457,8 +457,8 @@ function latsol(){
 const RATIO={'3:4':480,'4:5':450,'1:1':360,'9:16':640};
 const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],['kesulitan','Tingkat kesulitan'],['streak','Streak'],['kampus','Kampus impian'],['badge','Badge'],['level','Level & EXP'],['username','Nama'],['angkatan','Angkatan']];
 const LOCKED=['Nama','Kampus & prodi impian','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
-const SEKUNDER=[['streak','Streak'],['aktif','Hari aktif'],['growth','Perkembangan']];
-const TERSIER=[['kesulitan','Tingkat kesulitan'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
+const SEKUNDER=[['streak','Streak'],['growth','Perkembangan']];
+const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
 const TPLS=[['klasik','Klasik','Satu angka besar, seperti kartu streak'],['log','Study Log','Rapi ala catatan harian'],['stat','Statistik','Grafik harian + angka ringkas'],['kam','Menuju Kampus','Fokus ke target PTN dan mastery']];
 const wm='<div class="wm">Gradient<span class="o"><span class="i">UTBK</span></span></div>';
 const who=(f,d)=>f.username?(f.angkatan?`${esc(d.first)} (Angkatan ${d.angkatan})`:esc(d.first)):'Pejuang UTBK';
