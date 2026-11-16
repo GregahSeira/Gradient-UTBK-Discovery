@@ -663,8 +663,8 @@ const TPL={
   if(f.growth){
    const lvl=s.mlevel||'subchap',src=(P.materi||[]).length?mRows(d,P,lvl):(P.skills||[]),nUp=src.filter(x=>x.to>x.from).length,up=(sc&&sc.one?src:(P.materi||[]).length?src.slice():src.filter(x=>x.to>x.from)).sort((a,b)=>(b.to-b.from)-(a.to-a.from)),NR=Math.max(1,ROWS.n||99),top=up.slice(0,NR);
    const ms=(x)=>(P.materi||[]).find(y=>y.k===x.k&&y.n.toLowerCase()===x.name.toLowerCase()),tsoal=top.reduce((a,x)=>a+((ms(x)||{}).soal||0),0);
-   const sr=top.map(x=>`<div class="mr2"><div class="t"><span class="stg" style="--c:${SUB[x.k].c}">${x.k}</span><span class="sn">${esc(x.name)}</span><span class="sq">${x.soal?x.soal+' soal':ms(x)?ms(x).soal+' soal':''}</span></div><div class="b"><div class="mb"><i class="b" style="width:${Math.min(x.from,x.to)}%;background:${SUB[x.k].c}"></i><i class="g" style="width:${Math.max(x.to-x.from,0)}%"></i></div><span class="sv">${x.from}% → ${x.to}%</span>${x.to===x.from?'<span class="dl fl">tetap</span>':dltG(x.to-x.from,v=>(x.to>x.from?'+':'-')+v+'%')}</div></div>`).join('')||'<div class="more">Belum ada materi yang naik</div>';
-   grow=`<div class="blk grw"><div class="bh"><span>Perkembangan mastery</span><b>${sc&&sc.one?'materi ini':`${nUp} ${MLV[lvl][1]} naik`}</b></div>${sr}${up.length>NR?`<div class="more">+${up.length-NR} ${MLV[lvl][1]} lain dipelajari</div>`:''}</div>`;
+   const sr=top.map(x=>`<div class="mr2"><div class="t"><span class="stg" style="--c:${SUB[x.k].c}">${x.k}</span><span class="sn">${esc(x.name)}</span><span class="sq">${x.soal!=null?x.soal+' soal':ms(x)?ms(x).soal+' soal':''}</span></div><div class="b"><div class="mb"><i class="b" style="width:${Math.min(x.from,x.to)}%;background:${SUB[x.k].c}"></i><i class="g" style="width:${Math.max(x.to-x.from,0)}%"></i></div><span class="sv">${x.from}% → ${x.to}%</span>${x.to===x.from?'<span class="dl fl">tetap</span>':dltG(x.to-x.from,v=>(x.to>x.from?'+':'-')+v+'%')}</div></div>`).join('')||'<div class="more">Belum ada materi yang naik</div>';
+   grow=`<div class="blk grw"><div class="bh"><span>Perkembangan mastery</span><b>${sc&&sc.one?'materi ini':`${nUp} ${MLV[lvl][1]} naik`}</b></div>${sr}${up.length>NR?`<div class="more">+${up.length-NR} ${MLV[lvl][1]} lain${lvl==='sub'?'':' dipelajari'}</div>`:''}</div>`;
   }
   const mx=Math.max(...P.subtes.map(x=>x.sec),1);
   const mxs=Math.max(...P.subtes.map(x=>x.soal),1),dbar=(x)=>{const [,Q]=applyScope(d,P,{preset:'custom',scope:{subtes:[x.k],materi:''}});const tt=Q.soal||x.soal||1;return `<div class="sb kd" style="width:${x.soal/mxs*100}%">${Object.entries(Q.diff).filter(([,[t]])=>t).map(([n,[t]])=>`<i style="width:${t/tt*100}%;background:${DIFFC[n]}"></i>`).join('')}</div>`};
@@ -743,7 +743,7 @@ const CHAP={'Penalaran Deduktif':'Penalaran Logis','Penalaran Induktif':'Penalar
 const MLV={sub:['Subtes','subtes'],chap:['Chapter','chapter'],subchap:['Sub-chapter','sub-chapter']};
 function mRows(d,P,lv){
  const M=P.materi||[];
- if(lv==='sub'){const md=P.mdel||{};return (P.subtes||[]).map(x=>{const to=d.mastery[x.k]||0,dl=md[x.k]||0;return {k:x.k,name:SUB[x.k].n,from:Math.max(to-dl,0),to,soal:x.soal}})}
+ if(lv==='sub'){const md=P.mdel||{};return Object.keys(d.mastery).map(k=>{const to=d.mastery[k]||0,dl=md[k]||0,st=(P.subtes||[]).find(x=>x.k===k);return {k,name:SUB[k].n,from:Math.max(to-dl,0),to,soal:st?st.soal:0}}).sort((a,b)=>(b.to-b.from)-(a.to-a.from)||b.soal-a.soal)}
  if(lv==='chap'){const g={};M.forEach(x=>{const c=CHAP[x.n]||x.n,key=x.k+'|'+c;const o=g[key]||(g[key]={k:x.k,name:c,soal:0,f:0,t:0});o.soal+=x.soal;o.f+=x.from*x.soal;o.t+=x.to*x.soal});return Object.values(g).map(o=>({k:o.k,name:o.name,soal:o.soal,from:Math.round(o.f/(o.soal||1)),to:Math.round(o.t/(o.soal||1))}))}
  return M.map(x=>({k:x.k,name:x.n,from:x.from,to:x.to,soal:x.soal}))}
 const G=(h,lv)=>lv>=3?h.replace(/style="height:([0-9]+)px"/,'style="height:auto;min-height:$1px"'):h;
