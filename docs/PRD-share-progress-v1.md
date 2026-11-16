@@ -41,6 +41,7 @@ Isinya scope produk dan aturan data. Prototype: https://claude.ai/artifact/F3E5P
 | Catatan | Teks user | Opsional |
 
 Aturan Perkembangan mastery:
+
 - Tingkat = Subtes, Chapter, atau Sub-chapter. Bawaan otomatis Sub-chapter kalau minimal 3 materi dikerjakan, kalau kurang pakai Subtes.
 - Yang dikerjakan di atas, urut dari kenaikan terbesar. Yang tidak dikerjakan = baris pudar di bawah label "Belum dikerjakan".
 - Jumlah baris bawaan = sebanyak yang muat. User bisa pilih jumlah, kartu pindah ke 9:16 kalau tidak muat.
