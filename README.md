@@ -25,6 +25,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Eksplorasi tampilan kartu (pilih di Atur isi kartu): Ringkas (default), Mastery naik (bar sebelum dan sesudah per subtes, skill yang naik), Jejak latihan (akurasi per tingkat kesulitan, soal per hari, naik tingkat soal), Highlight (satu kalimat per capaian).
 - Kartu share default: portrait 3:4 (360x480, ekspor 1080x1440) layout rapor ala referensi Alternatifa: waktu belajar dengan target, kubus soal dan akurasi, waktu per subtes, tingkat kesulitan beserta akurasi per level.
 - Studio share: periode, 4 gaya kartu, 3 rasio, toggle data, caption, link, privasi, share ke X
+- Kustomisasi ringan (opsi B dari masukan studytwt): 3 tema kartu (Ungu default, Hitam putih, Terang), toggle foto profil di Tersier (default mati), catatan singkat maksimal 100 karakter (sekitar dua baris di kartu). Isi kartu otomatis dirapatkan kalau catatan atau avatar bikin kartu penuh.
 - Panel kontrol prototype dan form masukan
 
 ## Catatan teknis
