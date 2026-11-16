@@ -52,10 +52,10 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Data terkunci tidak lagi muncul sebagai opsi.
 
 ### Section Progress belajar (profil, tab Ringkasan)
-- 3 tab: Hari ini, 7 hari terakhir, 30 hari terakhir.
-- Ringkasan 2x2: Waktu belajar (selisih dari rerata, atau rata-rata per hari untuk 30 hari), Soal dikerjakan (% benar), Streak (Hari ini) atau Hari aktif (7 dan 30 hari), Mastery naik.
-- Baris "Paling banyak: subtes (waktu)" dan link "Lihat selengkapnya di Habit" (rentang grafik Habit ikut 7 atau 30 hari).
-- Tombol Bagikan di judul: Hari ini membuka kartu harian, 7 dan 30 hari membuka kartu mingguan (kartu 30 hari belum ada). Angka 30 hari (soal, benar, materi naik) masih data contoh.
+- 2 tab: Hari ini dan 7 hari terakhir (tab 30 hari dihapus).
+- Ringkasan 2x2: Waktu belajar (selisih dari rerata), Soal dikerjakan (% benar), Streak (Hari ini) atau Hari aktif x/7 (7 hari), Mastery naik.
+- Baris "Paling banyak: subtes (waktu)" dan link "Lihat selengkapnya di Habit" (rentang grafik Habit ikut 7 hari).
+- Tombol Bagikan di judul membuka kartu harian atau mingguan sesuai tab.
 
 ## Ditinjau lagi di akhir
 - Masukan kkaocarpenter: tambah persentase soal dikerjakan, jangan cuma lama waktu belajar. Maksud persisnya belum jelas (kartu sudah punya jumlah soal dan persen benar). Kalau maksudnya persen terhadap target soal harian, butuh data target yang belum ada.
