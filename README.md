@@ -46,6 +46,10 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Studio berisi kartu Ringkasan plus kustomisasi: periode, tema, nama di kartu, toggle data dalam 2 kategori: Data profil (nama, foto profil, nama sekolah, PTN & prodi impian, badge, level & EXP) dan Data progress belajar (waktu belajar, jumlah soal, jumlah soal benar, streak, hari aktif, perkembangan mastery). Yang bisa disembunyikan hanya foto profil, nama sekolah, PTN & prodi impian, badge, level & EXP, streak, hari aktif. Nama, waktu belajar, jumlah soal, jumlah soal benar, dan perkembangan mastery selalu tampil (ikon gembok), catatan, caption.
 - Template lain (Mastery Subtes, Mastery, Materi, Custom dengan fokus, Jejak latihan, Highlight) disimpan di kode untuk versi berikutnya.
 
+### Panel kustomisasi (ringkas)
+- Satu panel, tiap baris: label kiri, kontrol kanan. Periode, Ukuran (3:4 Feed, 9:16 Story), Mastery (tingkat + jumlah baris dalam satu baris), Tema (3 lingkaran warna), Tampilkan (7 chip, yang mati dicoret), Nama, Catatan, lalu caption disembunyikan di "Edit caption".
+- Data terkunci tidak lagi muncul sebagai opsi.
+
 ## Ditinjau lagi di akhir
 - Masukan kkaocarpenter: tambah persentase soal dikerjakan, jangan cuma lama waktu belajar. Maksud persisnya belum jelas (kartu sudah punya jumlah soal dan persen benar). Kalau maksudnya persen terhadap target soal harian, butuh data target yang belum ada.
 - Masukan njanjanja26: mapel sulit ditandai merah lalu tampil kalau ada peningkatan. Dibatalkan sementara karena risiko kartu terlihat negatif untuk mastery rendah tanpa peningkatan.
