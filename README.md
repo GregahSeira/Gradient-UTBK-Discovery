@@ -42,6 +42,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 
 ## Scope MVP (V1)
 - Hanya 1 template: Ringkasan. Tidak ada pilihan gaya kartu.
+- Perkembangan mastery: maksimal 4 materi, tiap baris memuat jumlah soal yang dikerjakan di materi itu (cerita: mastery naik karena sekian soal). Header: jumlah materi naik dan total soalnya.
 - Studio berisi kartu Ringkasan plus kustomisasi: periode, tema, nama di kartu, toggle data Utama, Sekunder, Tersier (semua bisa dimatikan), catatan, caption.
 - Template lain (Mastery Subtes, Mastery, Materi, Custom dengan fokus, Jejak latihan, Highlight) disimpan di kode untuk versi berikutnya.
 
