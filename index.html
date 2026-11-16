@@ -323,7 +323,7 @@ const SARAN=[{n:'Nabila Putri',sub:"Angkatan '27 (ITB)",h:330},{n:'Rizky Andika'
 const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 
 /* ============ STATE ============ */
-const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:1,growth:1,kesulitan:0,benar:1,avatar:1,badge:1,level:1,sekolah:1,angkatan:0,mpers:0,listmat:0,soalhari:0};
+const DEFF={durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:1,avatar:1,badge:1,level:1,sekolah:1,angkatan:0,mpers:0,listmat:0,soalhari:0};
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
  st:{period:'week',tpl:'rapor',preset:'rapor',ratio:'3:4',theme:'ungu',note:'',name:'',scope:{subtes:[],materi:''},msub:'',mlevel:'subchap',mcount:0,open:false,flags:{...DEFF},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0,snaps:{},pubSlug:''};
@@ -669,7 +669,7 @@ const TPL={
   const tl=(k,v,u,sm,sc)=>`<div class="tl"><span class="tk">${k}</span><b>${v}${u?`<u${u[0]==='/'?' class="sl"':''}>${u}</u>`:''}</b>${sm?`<small${sc?` style="color:${sc}"`:''}>${sm}</small>`:''}</div>`;
   const tiles=[];
   if(f.streak)tiles.push(`<div class="tl stk"><span class="tk">Streak</span><b>${d.streak}<u> hari</u></b><small class="sks">berturut-turut</small><span class="fi">${px('flame',40)}</span></div>`);
-  if(f.aktif)tiles.push(tl('Hari aktif',d.totalActive||act,' hari','total di Gradient'));
+  
   if(f.soal)tiles.push(tl('Soal dikerjakan',P.soal,'',f.benar?`${P.benar} benar · ${acc}%`:`di ${P.subtes.filter(x=>x.soal>0).length} subtes`,f.benar?accc:''));
   const tgrid=tiles.length?`<div class="tl3" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:'';
   let grow='',newm='';
@@ -775,7 +775,7 @@ function makeCaption(){
  if(f.materi&&P.subtes.length)L.push(`- subtes: ${P.subtes.map(x=>x.k).join(', ')}`);
  if(s.tpl==='materi'&&(P.materi||[]).length){const tm=P.materi.slice().sort((a,b)=>b.sec-a.sec).slice(0,3);L.push(`- ${P.materi.length} materi, terlama: ${tm.map(x=>x.n).join(', ')}`)}
  if(f.streak)L.push(`- streak ${d.streak} hari`);
- if(f.aktif)L.push(`- total ${d.totalActive||act} hari aktif di Gradient`);
+ 
  if(f.growth){const up=(P.skills||[]).filter(x=>x.to>x.from).sort((a,b)=>(b.to-b.from)-(a.to-a.from)).slice(0,3);if(up.length){L.push('- mastery naik:');up.forEach(x=>L.push(`  ${x.name} ${x.from}% ke ${x.to}% (+${x.to-x.from}%)`))}}
  if(f.kesulitan&&P.diff.Sulit[0])L.push(`- ${P.diff.Sulit[0]} soal level sulit, ${P.diff.Sulit[1]} bener`);
  if(f.level)L.push(`- Lv ${d.level}, ${rp(d.exp)} EXP`);
@@ -822,7 +822,7 @@ function renderStudio(){
   ${R('Ukuran',segS('ratio',[['3:4','3:4 Feed'],['9:16','9:16 Story']],s.ratio))}
   ${R('Mastery',segS('mlevel',Object.entries(MLV).map(([k,[t]])=>[k,t]),lvNow)+`<select id="mcount" aria-label="Jumlah mastery" class="${FOCUS} font-nunito-sans h-8 rounded-full border border-midnight-700 bg-midnight-800 px-2.5 text-xs font-bold text-white"><option value="0">Penuh</option>${Array.from({length:nRows},(_,i)=>`<option value="${i+1}"${s.mcount===i+1?' selected':''}>${i+1} baris</option>`).join('')}</select>`)}
   ${R('Tema',[['ungu','Gelap ungu','linear-gradient(135deg,#261c48,#171421)'],['hitam','Hitam putih','linear-gradient(135deg,#fff 50%,#0b0b0d 50%)'],['terang','Terang','linear-gradient(135deg,#ebe3ff,#faf8ff)']].map(([k,t,sw])=>`<button type="button" data-act="theme" data-v="${k}" aria-pressed="${s.theme===k}" aria-label="${t}" title="${t}" class="${FOCUS} size-8 rounded-full border-2 cursor-pointer ${s.theme===k?'border-brand-300 ring-2 ring-brand-300/40':'border-midnight-700'}" style="background:${sw}"></button>`).join(''))}
-  ${R('Tampilkan',[['avatar','Foto'],['sekolah','Sekolah'],['kampus','PTN impian'],['badge','Badge'],['level','Level & EXP'],['benar','Soal benar'],['streak','Streak'],['aktif','Hari aktif']].map(([k,t])=>tg(k,t)).join(''))}
+  ${R('Tampilkan',[['avatar','Foto'],['sekolah','Sekolah'],['kampus','PTN impian'],['badge','Badge'],['level','Level & EXP'],['benar','Soal benar'],['streak','Streak']].map(([k,t])=>tg(k,t)).join(''))}
   ${R('Nama',`<input id="cname" type="text" maxlength="20" autocomplete="off" value="${esc(s.name||'')}" placeholder="${esc(D().first)} (bisa diganti)" class="${IN} h-9">`,'cname')}
   ${R('Catatan',`<textarea id="note" maxlength="100" rows="2" placeholder="Opsional, maks 100 karakter" class="${IN} resize-none py-2">${esc(s.note||'')}</textarea>`,'note')}
   <details class="group"><summary class="font-nunito cursor-pointer list-none text-xs font-extrabold text-[#b79cff]">Edit caption postingan</summary><div class="mt-2 flex flex-col gap-1.5"><textarea id="cap" class="${IN} min-h-28 resize-y p-3">${esc(s.caption)}</textarea><div class="flex justify-end"><button type="button" data-act="cap-reset" class="${FOCUS} font-nunito text-xs font-extrabold text-[#b79cff] cursor-pointer">Reset caption</button></div></div></details>
