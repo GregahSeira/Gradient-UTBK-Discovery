@@ -18,6 +18,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Masih placeholder: ikon tile stat Habit (soal/materi), ikon ringkasan Achievement.
 
 ## Aset baru (eksploratif, bukan dari UI asli)
+- Kartu "Progress belajar" (hari ini dan minggu ini) di tab Ringkasan, masing-masing dengan tombol Bagikan
 - Tombol "Bagikan progress" di tab profil, kartu ajakan di Habit, ikon share di badge Achievement, halaman hasil sesi
 - Studio share: periode, 4 gaya kartu, 3 rasio, toggle data, caption, link, privasi, share ke X
 - Panel kontrol prototype dan form masukan
