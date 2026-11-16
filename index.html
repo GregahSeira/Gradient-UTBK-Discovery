@@ -157,6 +157,7 @@ body{font-family:'Nunito',system-ui,sans-serif;color:#fff;-webkit-font-smoothing
 .c-rpr .tl3 .tl{padding:3px 10px}
 .c-rpr .tl u{font-size:12px;font-weight:800;text-decoration:none;color:rgba(255,255,255,.7);margin-left:2px}
 .c-rpr .tl u.sl{margin-left:0}
+.c-rpr .tl b.fl{display:flex;align-items:center;gap:5px}.c-rpr .tl b.fl svg{width:24px;height:24px;flex:none;display:block}
 .c-rpr .tl2{display:grid;gap:5px}
 .c-rpr .dl{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;line-height:1.2}
 .c-rpr .dl.up{color:#4ade80}.c-rpr .dl.dn{color:#fb923c}
@@ -569,7 +570,7 @@ const TPL={
   const hero=`<div class="hero"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="hv"><span>Waktu belajar</span><b>${fmtDur(P.sec)}</b></div>${side}</div>`;
   const tl=(k,v,u,sm,sc)=>`<div class="tl"><span class="tk">${k}</span><b>${v}${u?`<u${u[0]==='/'?' class="sl"':''}>${u}</u>`:''}</b>${sm?`<small${sc?` style="color:${sc}"`:''}>${sm}</small>`:''}</div>`;
   const tiles=[];
-  if(f.streak)tiles.push(tl('Streak',d.streak,' hari'));
+  if(f.streak)tiles.push(`<div class="tl"><span class="tk">Streak</span><b class="fl">${px('flame',24)}${d.streak}<u> hari</u></b></div>`);
   if(f.aktif)tiles.push(tl('Hari aktif',act,'/7','minggu ini'));
   tiles.push(tl('Soal dikerjakan',P.soal,'',`${acc}% benar`,accc));
   const tgrid=tiles.length?`<div class="tl3" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:'';
