@@ -167,6 +167,45 @@ body{font-family:'Nunito',system-ui,sans-serif;color:#fff;-webkit-font-smoothing
 .c-rpr .bgs{display:flex;align-items:center;gap:2px}
 .c-rpr .bgs img{height:24px;width:auto;display:block}
 .c-rpr .sch{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-top:-2px;line-height:1.2}
+.c-mst .hlw,.c-lat .hlw,.c-cer .hlw{display:flex;flex-direction:column;gap:2px}
+.c-rpr .hl{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;line-height:1.12}
+.c-rpr .hl em{font-style:normal;color:#4ade80}
+.c-rpr .hs2{font-size:12px;font-weight:700;color:rgba(255,255,255,.8)}
+.c-rpr .hs2 b{color:#4ade80;font-weight:800}
+.c-rpr .kmp.sm{height:38px}.c-rpr .kmp.sm .lg{width:26px;height:26px}.c-rpr .kmp.sm .kt b{font-size:13px}.c-rpr .kmp.sm .kt small{font-size:10.5px}.c-rpr .kmp.sm .bl{height:70px}
+.c-rpr .mr{display:grid;grid-template-columns:32px 1fr 34px 44px;gap:6px;align-items:center}
+.c-rpr .mb{height:9px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;display:flex}
+.c-rpr .mb i{display:block;height:100%}
+.c-rpr .mb i.b{opacity:.5}
+.c-rpr .mb i.g{box-shadow:0 0 0 1px rgba(255,255,255,.55) inset}
+.c-rpr .mv{font-size:12px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.c-rpr .mr .dl,.c-rpr .sk2 .dl,.c-rpr .lr3 .dl{font-size:11px;justify-content:flex-end}
+.c-rpr .dl.fl{color:rgba(255,255,255,.55)}
+.c-rpr .lg2{display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,.7)}
+.c-rpr .lg2 i{width:14px;height:6px;border-radius:99px;background:rgba(255,255,255,.9);display:inline-block}
+.c-rpr .sk2{display:grid;grid-template-columns:32px 1fr auto 42px;gap:6px;align-items:center}
+.c-rpr .sk2 .sn{font-size:12px;font-weight:800;line-height:1.2}
+.c-rpr .sk2 .sv{font-size:11px;font-weight:700;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+.c-rpr .lr3{display:grid;grid-template-columns:62px 1fr 50px 38px 44px;gap:6px;align-items:center}
+.c-rpr .ln3{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800}
+.c-rpr .ln3 i{width:8px;height:8px;border-radius:99px;flex:none}
+.c-rpr .lt{font-size:11px;font-weight:700;color:rgba(255,255,255,.75);text-align:right}
+.c-rpr .la{font-size:13px;font-weight:800;text-align:right}
+.c-rpr .ds{display:flex;gap:6px;align-items:flex-end;height:60px}
+.c-rpr .ds>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%}
+.c-rpr .ds i{display:block;width:100%;border-radius:5px 5px 2px 2px}
+.c-rpr .ds span{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.7)}
+.c-rpr .lu{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.85)}
+.c-rpr .lu b{color:#fff;font-weight:800}
+.c-rpr .cb{gap:7px}
+.c-rpr .cr{display:flex;align-items:center;gap:10px;background:#221e2f;border:2px solid #2a253a;border-radius:12px;padding:7px 10px}
+.c-rpr .ci{width:26px;height:26px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex:none}
+.c-rpr .ct{font-size:13px;font-weight:700;line-height:1.3;color:rgba(255,255,255,.88)}
+.c-rpr .ct b{color:#fff;font-weight:800}
+.c-rpr .cpr svg{stroke-width:2.4}
+.c-mst .blk{gap:3px;padding:4px 10px}.c-mst .hl{font-size:20px}.c-mst .mr{gap:5px}.c-mst .mr .stg{height:14px;line-height:14px}
+.c-cer .cr{padding:5px 9px;gap:8px}.c-cer .cb{gap:5px}.c-cer .ci{width:24px;height:24px}.c-cer .ct{font-size:12.5px;line-height:1.25}
+.c-lat .blk{gap:4px}
 /* auto-padat */
 .sc.d1{padding:16px;gap:9px}
 .d1 .bd{gap:9px}.d1 h3{font-size:19px!important}.d1 .lr{padding-top:6px;gap:3px}.d1 .lr .v{font-size:15px}.d1 .lr .l{font-size:12px}
@@ -221,22 +260,22 @@ const DATA={
    {id:'penjelajah',name:'Penjelajah Nalar',desc:'Raih 10 achievement apa saja (Hadiah: Gelar Penjelajah)',cur:1,max:1,col:20,sec:'done',date:'20 Sep'},
    {id:'streak7',name:'Streak 7 Hari',desc:'Belajar 7 hari tanpa putus (Hadiah: +50 EXP)',cur:1,max:1,col:0,sec:'done',date:'28 Sep'},
    {id:'fokus50',name:'Jam Fokus 50',desc:'Terbuka setelah kamu raih Streak 30 Hari (Hadiah: Border Jam Pasir)',cur:0,max:1,col:8,sec:'lock'}],
-  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',sec:m(597),soal:186,benar:134,materiCount:24,
+  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',mdel:{PU:4,PPU:2,PBM:0,PK:12,LBI:6,LBE:0,PM:11},skills:[{k:'PK',name:'Pangkat negatif',from:24,to:48},{k:'PK',name:'Pangkat pecahan',from:40,to:55},{k:'PM',name:'Peluang',from:12,to:23},{k:'PU',name:'Penalaran deduktif',from:31,to:40}],levelUp:['Eksponen','Logaritma'],prevDiff:{Mudah:[58,50],Sedang:[76,50],Sulit:[40,15]},soalDays:[28,34,12,26,5,46,35],accDays:[70,74,66,75,60,78,72],sec:m(597),soal:186,benar:134,materiCount:24,
    subtes:[{k:'PU',sec:m(140),topics:['Penalaran Deduktif']},{k:'PK',sec:m(120),topics:['Eksponen','Logaritma']},{k:'PPU',sec:m(95),topics:['Wacana Sains']},{k:'PBM',sec:m(70),topics:['Kalimat Efektif']},{k:'LBI',sec:m(65),topics:['Ide Pokok']},{k:'PM',sec:m(55),topics:['Peluang']},{k:'LBE',sec:m(52),topics:['Reading']}],
    diff:{Mudah:[62,56],Sedang:[80,56],Sulit:[44,22]},mastery:{avg:42,delta:5},skillUp:{name:'Pangkat negatif',k:'PK',delta:24}},
-  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',sec:m(115),soal:31,benar:24,materiCount:4,
+  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',mdel:{PK:4,PU:2},skills:[{k:'PK',name:'Eksponen',from:62,to:68},{k:'PU',name:'Penalaran deduktif',from:38,to:40}],levelUp:['Eksponen'],sec:m(115),soal:31,benar:24,materiCount:4,
    subtes:[{k:'PK',sec:m(70),topics:['Eksponen','Logaritma']},{k:'PU',sec:m(45),topics:['Penalaran Deduktif']}],
    diff:{Mudah:[12,11],Sedang:[13,10],Sulit:[6,3]},mastery:{avg:42,delta:2},skillUp:{name:'Eksponen',k:'PK',delta:6}},
-  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',sec:m(14),soal:20,benar:16,materiCount:1,
+  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',mdel:{PK:6},skills:[{k:'PK',name:'Pangkat negatif',from:24,to:48},{k:'PK',name:'Pangkat pecahan',from:40,to:55},{k:'PK',name:'Bentuk akar',from:63,to:63},{k:'PK',name:'Persamaan eksponen',from:73,to:71}],levelUp:[],sec:m(14),soal:20,benar:16,materiCount:1,
    subtes:[{k:'PK',sec:m(14),topics:['Eksponen']}],diff:{Mudah:[6,6],Sedang:[9,7],Sulit:[5,3]},mastery:{label:'Eksponen',avg:68,delta:6},skillUp:{name:'Pangkat negatif',k:'PK',delta:24}}},
  baru:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'Pendatang Baru',school:'SMAN 3 Bandung',join:2026,streak:1,exp:85,level:1,
   kampus:{ptn:'Institut Teknologi Bandung',short:'ITB',prodi:'Teknik Informatika'},reminder:null,
   mastery:{PU:0,PPU:0,PBM:0,PK:6,LBI:0,LBE:0,PM:9},
   days:[0,0,0,0,0,0,52],lastWeekSec:0,hof:[],
   badges:[{id:'streak7',name:'Streak 7 Hari',desc:'Belajar 7 hari tanpa putus (Hadiah: +50 EXP)',cur:1,max:7,col:0,sec:'run'},{id:'streak30',name:'Streak 30 Hari',desc:'Belajar 30 hari tanpa putus (Hadiah: +150 EXP)',cur:1,max:30,col:1,sec:'run'},{id:'fokus50',name:'Jam Fokus 50',desc:'Terbuka setelah kamu raih Streak 30 Hari (Hadiah: Border Jam Pasir)',cur:0,max:1,col:8,sec:'lock'}],
-  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2}},
-  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2}},
-  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2}}}
+  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2},mdel:{PK:6,PM:9},skills:[],levelUp:[]},
+  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2},mdel:{PK:6,PM:9},skills:[],levelUp:[]},
+  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]},mastery:{avg:2,delta:2},mdel:{PK:6,PM:9},skills:[],levelUp:[]}}
 };
 const SERIES=[62,70,0,105,88,140,60,110,0,95,120,45,150,80,190,125,60,0,90,130,75,160,100,45,0].map(x=>x*60);
 const FRIENDS=[{n:'Sinta',st:'Sedang latihan',on:1,s:7,h:330},{n:'Raka',st:'Sedang latihan',on:1,s:5,h:45},{n:'Nadia',st:'Terakhir aktif 2 jam lalu',on:0,s:3,h:270}];
@@ -459,7 +498,7 @@ const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],[
 const LOCKED=['Nama','Kampus & prodi impian','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
 const SEKUNDER=[['streak','Streak'],['growth','Perkembangan'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
 const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan']];
-const TPLS=[['klasik','Klasik','Satu angka besar, seperti kartu streak'],['log','Study Log','Rapi ala catatan harian'],['stat','Statistik','Grafik harian + angka ringkas'],['kam','Menuju Kampus','Fokus ke target PTN dan mastery']];
+const TPLS=[['rapor','Ringkas','Semua data dalam satu kartu'],['mastery','Mastery naik','Subtes dan skill yang naik'],['latsol','Jejak latihan','Kesulitan dan tren soal'],['cerita','Highlight','Satu kalimat per capaian']];
 const wm='<div class="wm">Gradient<span class="o"><span class="i">UTBK</span></span></div>';
 const who=(f,d)=>f.username?(f.angkatan?`${esc(d.first)} (Angkatan ${d.angkatan})`:esc(d.first)):'Pejuang UTBK';
 const stag=(k)=>`<span class="stag" style="--c:${SUB[k].c}">${k}</span>`;
@@ -479,6 +518,14 @@ function foot(d,f,s,opts={}){
  if(f.badge){const bl=s.badge?[{name:s.badge}]:(d.hof.length?d.hof:earned()).slice(0,3);bl.forEach(b=>out.push(`<span class="cp">${px('lvl',16)}${esc(b.name)}</span>`))}
  return out.length?`<div class="ft">${out.join('')}</div>`:'';
 }
+const ARW=(u)=>`<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><path d="${u?'M5 1l4.2 7.2H.8z':'M5 9L.8 1.8h8.4z'}" fill="currentColor"/></svg>`;
+const dltG=(v,fm)=>`<span class="dl ${v>=0?'up':'dn'}">${ARW(v>=0)}${fm(Math.abs(v))}${''}</span>`;
+function HD(d,P,f,s){const lab=P.key==='week'?'MINGGU INI':P.key==='day'?'HARI INI':'SESI LATIHAN';
+ return `<div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div><div class="nmrow"><span class="nm1">${esc(d.first)}</span>${idTop(d,f,s)}</div>${f.sekolah?`<div class="sch">${esc(d.school)}</div>`:''}<div class="kmp sm"><img class="bl" src="${IMG.bld}" alt=""><span class="lg"><img src="${IMG.itb}" alt=""></span><div class="kt"><b>${esc(d.kampus.ptn)}</b><small>Kampus impian · ${esc(d.kampus.prodi)}</small></div></div>`}
+function CHIPS(d,P,f,noSoal){const o=noSoal==='min'?[]:[`<span class="cpr"><svg viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${fmtDur(P.sec)} belajar</span>`];
+ if(!noSoal)o.push(`<span class="cpr">${P.soal} soal · ${pct(P.benar,P.soal)}% benar</span>`);
+ if(f.streak)o.push(`<span class="cpr">${px('flame',14)}${d.streak} hari streak</span>`);
+ return o.length?`<div class="ft" style="gap:5px">${o.join('')}</div>`:''}
 const TPL={
  log:(d,P,f,s)=>`<div class="sc c-log" style="height:${RATIO[s.ratio]}px"><div class="hd">${wm}${f.username?`<span class="who">${who(f,d)}</span>`:''}</div>
   <div><div class="sm" style="letter-spacing:.08em;font-weight:800">STUDY LOG · ${P.range}</div><h3 style="margin-top:4px">${title(P)}</h3></div>
@@ -541,6 +588,38 @@ const TPL={
   const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),tt=dif.reduce((a,[,[t]])=>a+t,0)||1;
   const kes=f.kesulitan?`<div class="blk"><div class="bh"><span>Tingkat kesulitan</span></div><div class="kb">${dif.map(([n,[t]])=>`<i style="width:${t/tt*100}%;background:${DIFFC[n]}"></i>`).join('')}</div><div class="dg">${dif.map(([n,[t,b]])=>`<div><b><em style="background:${DIFFC[n]}"></em>${n}</b><span>${t} soal</span><span>${pct(b,t)}% benar</span></div>`).join('')||'<div>Belum ada soal</div>'}</div></div>`:'';
   return `<div class="sc c-rpr" style="height:${RATIO[s.ratio]}px"><div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div><div class="nmrow"><span class="nm1">${nm}</span>${idTop(d,f,s)}</div>${f.sekolah?`<div class="sch">${esc(d.school)}</div>`:''}${kam}<div class="bd">${hero}${tgrid}${grow}${mat}${kes}</div>${newm}${footR(d,f,s)}</div>`},
+ mastery:(d,P,f,s)=>{
+  const md=P.mdel||{},rows=Object.entries(d.mastery).map(([k,v])=>({k,cur:v,dl:md[k]||0})).sort((a,b)=>b.dl-a.dl||b.cur-a.cur);
+  const up=rows.filter(r=>r.dl>0),best=up[0];
+  const hl=up.length?`Mastery naik di <em>${up.length}</em> dari 7 subtes`:'Belum ada kenaikan mastery';
+  const sub=best?`Paling naik: ${SUB[best.k].n} <b>+${best.dl}%</b>`:'Lanjut latihan biar naik';
+  const mr=rows.map(r=>`<div class="mr"><span class="stg" style="--c:${SUB[r.k].c}">${r.k}</span><div class="mb"><i class="b" style="width:${Math.max(r.cur-r.dl,0)}%;background:${SUB[r.k].c}"></i><i class="g" style="width:${r.dl}%;background:${SUB[r.k].c}"></i></div><b class="mv">${r.cur}%</b>${r.dl>0?dltG(r.dl,v=>'+'+v):'<span class="dl fl">tetap</span>'}</div>`).join('');
+  const sk=(P.skills||[]).slice(0,2).map(x=>`<div class="sk2"><span class="stg" style="--c:${SUB[x.k].c}">${x.k}</span><span class="sn">${esc(x.name)}</span><span class="sv">${x.from}% → ${x.to}%</span>${x.to>x.from?dltG(x.to-x.from,v=>'+'+v):x.to<x.from?dltG(x.to-x.from,v=>v):'<span class="dl fl">tetap</span>'}</div>`).join('');
+  return `<div class="sc c-rpr c-mst" style="height:${RATIO[s.ratio]}px">${HD(d,P,f,s)}<div class="hlw"><div class="hl">${hl}</div><div class="hs2">${sub}</div></div><div class="bd"><div class="blk mrb"><div class="bh"><span>Mastery per subtes</span><b class="lg2"><i></i>naik minggu ini</b></div>${mr}</div>${sk?`<div class="blk"><div class="bh"><span>Skill yang naik</span></div>${sk}</div>`:''}</div>${CHIPS(d,P,f)}</div>`},
+ latsol:(d,P,f,s)=>{
+  const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),mxn=Math.max(...dif.map(([,[t]])=>t),1),pd=P.prevDiff||{};
+  const sul=P.diff.Sulit||[0,0];
+  const hl=sul[0]>0?`<em>${sul[1]}</em> dari ${sul[0]} soal sulit berhasil`:`<em>${P.soal}</em> soal dikerjakan`;
+  const sub=`${P.soal} soal · ${pct(P.benar,P.soal)}% benar`;
+  const lad=dif.map(([n,[t,b]])=>{const a=pct(b,t),pa=pd[n]?pct(pd[n][1],pd[n][0]):null;return `<div class="lr3"><span class="ln3"><i style="background:${DIFFC[n]}"></i>${n}</span><div class="mb"><i class="b" style="width:${t/mxn*100}%;background:${DIFFC[n]}"></i></div><span class="lt">${t} soal</span><b class="la">${a}%</b>${pa!==null?dltG(a-pa,v=>(a-pa>=0?'+':'-')+v):''}</div>`}).join('')||'<div class="more">Belum ada soal</div>';
+  let strip='';
+  if(P.soalDays){const mx=Math.max(...P.soalDays);strip=`<div class="blk"><div class="bh"><span>Soal per hari</span><b>terbanyak ${mx}</b></div><div class="ds">${P.soalDays.map((v,i)=>{const a=P.accDays[i];const c=a>=70?'#4ade80':a>=60?'#ffc83d':'#ff6a5c';return `<div><i style="height:${Math.max(4,v/mx*46)}px;background:${c}"></i><span>${DAYS[i][0]}</span></div>`}).join('')}</div><div class="more">warna: hijau 70% ke atas, kuning 60 sampai 69, merah di bawah 60</div></div>`}
+  const lu=(P.levelUp||[]).length?`<div class="lu"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Naik tingkat soal: <b>${P.levelUp.map(esc).join(', ')}</b></div>`:'';
+  return `<div class="sc c-rpr c-lat" style="height:${RATIO[s.ratio]}px">${HD(d,P,f,s)}<div class="hlw"><div class="hl">${hl}</div><div class="hs2">${sub}</div></div><div class="bd"><div class="blk"><div class="bh"><span>Per tingkat kesulitan</span><b class="lg2">akurasi</b></div>${lad}</div>${strip}${lu}</div>${CHIPS(d,P,f,true)}</div>`},
+ cerita:(d,P,f,s)=>{
+  const md=P.mdel||{},up=Object.entries(md).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]),sul=P.diff.Sulit||[0,0];
+  const IC={up:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',tg:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',ok:'<path d="M20 6L9 17l-5-5"/>',lv:'<path d="M12 19V5M5 12l7-7 7 7"/>',ck:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bk:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'};
+  const row=(ic,col,t)=>`<div class="cr"><span class="ci" style="background:${col}22;color:${col}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${IC[ic]}</svg></span><div class="ct">${t}</div></div>`;
+  const R=[];
+  if(up.length)R.push(row('up','#4ade80',`Mastery naik di <b>${up.length} subtes</b>, paling melesat <b style="color:${SUB[up[0][0]].c}">${up[0][0]} +${up[0][1]}%</b>`));
+  const sk=(P.skills||[]).filter(x=>x.to>x.from).sort((a,b)=>(b.to-b.from)-(a.to-a.from))[0];
+  if(sk)R.push(row('tg','#ffc83d',`Skill <b>${esc(sk.name)}</b> naik <b>${sk.from}% → ${sk.to}%</b>`));
+  R.push(row('ok','#22d3ee',sul[0]>0?`<b>${P.soal} soal</b>, ${sul[1]} dari ${sul[0]} soal sulit berhasil (<b>${pct(sul[1],sul[0])}%</b>)`:`<b>${P.soal} soal</b> dikerjakan, ${pct(P.benar,P.soal)}% benar`));
+  if((P.levelUp||[]).length)R.push(row('lv','#b285f0',`Naik tingkat soal di <b>${P.levelUp.map(esc).join(', ')}</b>`));
+  let wt=`<b>${fmtDur(P.sec)}</b> belajar`;if(P.key==='week'&&d.lastWeekSec>0){const df=P.sec-d.lastWeekSec;wt+=`, <b style="color:${df>=0?'#4ade80':'#fb923c'}">${df>=0?'+':'-'}${fmtDur(Math.abs(df))}</b> dari minggu lalu`}
+  R.push(row('ck','#fde68a',wt));
+  if(P.subtes.length)R.push(row('bk','#c084fc',`Subtes: <b>${P.subtes.slice(0,4).map(x=>x.k).join(', ')}</b>${P.subtes.length>4?` +${P.subtes.length-4}`:''}`));
+  return `<div class="sc c-rpr c-cer" style="height:${RATIO[s.ratio]}px">${HD(d,P,f,s)}<div class="hlw"><div class="hl">Highlight ${P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'sesi ini'}</div></div><div class="bd cb">${R.join('')}</div>${CHIPS(d,P,f,'min')}</div>`},
  klasik:(d,P,f,s)=>{const when=P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'di sesi ini';
   const hero=f.durasi?fmtDur(P.sec):f.soal?String(P.soal):String(d.streak);
   const lbl=f.durasi?`belajar ${when}`:f.soal?`soal dikerjakan ${when}`:'hari beruntun belajar';
@@ -597,7 +676,7 @@ function renderStudio(){
  const periods=[['sesi','Sesi ini'],['day','Hari ini'],['week','Minggu ini']].filter(([k])=>k!=='sesi'||s.hasSesi||s.period==='sesi');
  const seg=(act,items,cur)=>`<div role="group" class="flex w-fit gap-1 rounded-full border-2 border-midnight-850 bg-midnight-900 p-1">${items.map(([k,t])=>k===cur?`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="true" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white bg-surface-brand mb-1 px-4 py-2 text-sm leading-5 tracking-[-0.28px] shadow-[0_4px_0_var(--accent-off-purple)] cursor-pointer">${t}</button>`:`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="false" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white border border-midnight-700 bg-midnight-800 px-3 py-2.5 text-xs leading-4.5 hover:bg-midnight-700 cursor-pointer">${t}</button>`).join('')}</div>`;
  const tile=(act,k,t,x,on)=>`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="${on}" class="${FOCUS} rounded-xl border-2 p-3 text-left transition-colors cursor-pointer ${on?'border-brand-300 bg-[rgba(178,133,240,0.18)]':'border-midnight-850 bg-midnight-800/40 hover:bg-midnight-800'}"><span class="font-nunito block text-[15px] font-extrabold text-white">${t}</span><span class="font-nunito-sans block text-xs font-semibold text-white/60">${x}</span></button>`;
- const settings=s.open?`<div class="border-midnight-850 flex flex-col gap-5 rounded-2xl border-2 p-4"><div class="flex flex-col gap-2"><span class="${LBL}">Periode</span>${seg('period',periods,s.period)}</div><div class="flex flex-col gap-2"><span class="${LBL}">Utama (selalu tampil)</span><div class="flex flex-wrap gap-2">${LOCKED.map(t=>`<span class="${CAT_OFF} !cursor-default !opacity-80 flex items-center gap-1.5"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t}</span>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Sekunder</span><div class="flex flex-wrap gap-2">${SEKUNDER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Tersier</span><div class="flex flex-wrap gap-2">${TERSIER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div>${s.flags.badge&&!earned().length?'<p class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Belum ada badge diraih, jadi belum ada yang tampil.</p>':''}</div><div class="flex flex-col gap-2"><label for="cap" class="${LBL}">Caption</label><textarea id="cap" class="${FOCUS} font-nunito-sans min-h-32 w-full resize-y rounded-xl border-2 border-midnight-700 bg-midnight-800 p-3 text-sm font-semibold text-white">${esc(s.caption)}</textarea><div class="flex items-center justify-between"><span class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Tidak pernah diposting otomatis</span><button type="button" data-act="cap-reset" class="${FOCUS} font-nunito text-xs font-extrabold text-[#b79cff] cursor-pointer">Reset caption</button></div></div></div>`:'';
+ const settings=s.open?`<div class="border-midnight-850 flex flex-col gap-5 rounded-2xl border-2 p-4"><div class="flex flex-col gap-2"><span class="${LBL}">Periode</span>${seg('period',periods,s.period)}</div><div class="flex flex-col gap-2"><span class="${LBL}">Tampilan kartu (eksplorasi)</span><div class="grid grid-cols-2 gap-2">${TPLS.map(([k,t,x])=>tile('tpl',k,t,x,s.tpl===k)).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Utama (selalu tampil)</span><div class="flex flex-wrap gap-2">${LOCKED.map(t=>`<span class="${CAT_OFF} !cursor-default !opacity-80 flex items-center gap-1.5"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t}</span>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Sekunder</span><div class="flex flex-wrap gap-2">${SEKUNDER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Tersier</span><div class="flex flex-wrap gap-2">${TERSIER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div>${s.flags.badge&&!earned().length?'<p class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Belum ada badge diraih, jadi belum ada yang tampil.</p>':''}</div><div class="flex flex-col gap-2"><label for="cap" class="${LBL}">Caption</label><textarea id="cap" class="${FOCUS} font-nunito-sans min-h-32 w-full resize-y rounded-xl border-2 border-midnight-700 bg-midnight-800 p-3 text-sm font-semibold text-white">${esc(s.caption)}</textarea><div class="flex items-center justify-between"><span class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Tidak pernah diposting otomatis</span><button type="button" data-act="cap-reset" class="${FOCUS} font-nunito text-xs font-extrabold text-[#b79cff] cursor-pointer">Reset caption</button></div></div></div>`:'';
  const ch=(k,l,extra='')=>`<div class="flex w-[74px] flex-col items-center gap-3"><${extra?'a '+extra:'button type="button" data-act="ch-'+k+'"'} class="${FOCUS} flex size-10 items-center justify-center rounded-full border border-midnight-700 bg-midnight-800 text-white transition-colors hover:bg-midnight-700 cursor-pointer" aria-label="${l}">${chIcon(k==='wa'?'wa':k==='ig'?'ig':k==='tw'?'x':k==='cp'?'link':'more')}</${extra?'a':'button'}><span class="font-nunito text-[13px] leading-tight font-bold text-white/90">${l}</span></div>`;
  if(!$('#studio .studio-dlg')){$('#studio').innerHTML=`<div class="studio-dlg ${DLG} sm:max-w-130" role="dialog" aria-label="Bagikan progress belajarmu"><div class="flex items-center justify-between px-6 pt-6"><h2 class="font-nunito text-[22px] leading-tight font-extrabold">Bagikan progress belajarmu</h2>${closeBtn('close-studio')}</div><div class="flex min-h-0 flex-col gap-6 overflow-y-auto p-6" id="sbody"></div></div>`}
  $('#sbody').innerHTML=`<div class="flex flex-col items-center gap-2" id="pv"></div>
@@ -654,6 +733,7 @@ async function exportPng(quiet){
 const FB=[
  {k:'where',q:'Biasanya kamu update progress belajar di mana?',multi:1,o:['X / Twitter','Instagram Story','WhatsApp Status','TikTok','Grup belajar / Discord','Nggak pernah update']},
  {k:'data',q:'Dari data di kartu, mana yang kamu pasti mau tampilkan?',multi:1,o:['Waktu belajar','Banding minggu lalu','Soal dan akurasi','Streak dan hari aktif','Mastery naik','Skill atau materi baru','Waktu per subtes','Tingkat kesulitan','Kampus impian','Badge','Level dan EXP','Nama sekolah']},
+ {k:'tpl',q:'Tampilan kartu mana yang paling mau kamu posting?',o:['Ringkas','Mastery naik','Jejak latihan','Highlight','Belum ada yang cocok']},
  {k:'cardlook',q:'Tampilan kartunya menurut kamu...',o:['Mau banget diposting','Oke, tapi perlu diubah','Kurang menarik','Nggak bakal diposting']},
  {k:'freq',q:'Seberapa sering kamu bakal share progress?',o:['Tiap hari','Tiap minggu','Sesekali','Nggak bakal']},
  {k:'ease',q:'Prosesnya dari buka sampai posting terasa...',o:['Gampang banget','Cukup gampang','Ribet','Bingung']},
