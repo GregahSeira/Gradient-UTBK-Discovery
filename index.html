@@ -162,6 +162,11 @@ body{font-family:'Nunito',system-ui,sans-serif;color:#fff;-webkit-font-smoothing
 .c-rpr .hs .dl{font-size:14px}
 .c-rpr .sk{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;line-height:1.2;min-height:26px}
 .c-rpr .sk i{width:8px;height:8px;border-radius:99px;flex:none}
+.c-rpr .nmrow{justify-content:space-between;align-items:center;gap:8px}
+.c-rpr .idc{display:flex;align-items:center;gap:5px;flex-wrap:nowrap}
+.c-rpr .bgs{display:flex;align-items:center;gap:2px}
+.c-rpr .bgs img{height:26px;width:auto;display:block}
+.c-rpr .sch{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-top:-2px;line-height:1.2}
 /* auto-padat */
 .sc.d1{padding:16px;gap:9px}
 .d1 .bd{gap:9px}.d1 h3{font-size:19px!important}.d1 .lr{padding-top:6px;gap:3px}.d1 .lr .v{font-size:15px}.d1 .lr .l{font-size:12px}
@@ -201,7 +206,7 @@ const DIFFC={Mudah:'#4ade80',Sedang:'#ffc83d',Sulit:'#ff6a5c'};
 const m=(x)=>x*60;
 const BADGE_COL={gold:'#f5b829',silver:'#b8bcc8',teal:'#2dc4d6',purple:'#7c3cdb',green:'#6fcf3a'};
 const DATA={
- rajin:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'The Undefeated',join:2026,streak:7,exp:1240,level:8,
+ rajin:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'The Undefeated',school:'SMAN 3 Bandung',join:2026,streak:7,exp:1240,level:8,
   kampus:{ptn:'Institut Teknologi Bandung',short:'ITB',prodi:'Teknik Informatika'},reminder:'19.00',
   mastery:{PU:34,PPU:61,PBM:45,PK:52,LBI:48,LBE:36,PM:18},
   days:[80,115,40,95,14,138,115].map(m),lastWeekSec:m(517),
@@ -224,7 +229,7 @@ const DATA={
    diff:{Mudah:[12,11],Sedang:[13,10],Sulit:[6,3]},mastery:{avg:42,delta:2},skillUp:{name:'Eksponen',k:'PK',delta:6}},
   sesi:{key:'sesi',label:'Sesi ini',range:'Latihan Eksponen, 15 Nov 2026',sec:m(14),soal:20,benar:16,materiCount:1,
    subtes:[{k:'PK',sec:m(14),topics:['Eksponen']}],diff:{Mudah:[6,6],Sedang:[9,7],Sulit:[5,3]},mastery:{label:'Eksponen',avg:68,delta:6},skillUp:{name:'Pangkat negatif',k:'PK',delta:24}}},
- baru:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'Pendatang Baru',join:2026,streak:1,exp:85,level:1,
+ baru:{user:'chisukigawara',name:"Chisu '27",first:'Chisu',angkatan:2027,title:'Pendatang Baru',school:'SMAN 3 Bandung',join:2026,streak:1,exp:85,level:1,
   kampus:{ptn:'Institut Teknologi Bandung',short:'ITB',prodi:'Teknik Informatika'},reminder:null,
   mastery:{PU:0,PPU:0,PBM:0,PK:6,LBI:0,LBE:0,PM:9},
   days:[0,0,0,0,0,0,52],lastWeekSec:0,hof:[],
@@ -240,7 +245,7 @@ const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 
 /* ============ STATE ============ */
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
- st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kesulitan:0,streak:1,growth:1,kampus:1,badge:0,level:0,username:1,angkatan:1},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
+ st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:1,growth:1,kesulitan:0,badge:0,level:0,sekolah:0,angkatan:0},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0};
 try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
 const D=()=>DATA[S.persona];
@@ -451,9 +456,9 @@ function latsol(){
 /* ============ KARTU ============ */
 const RATIO={'3:4':480,'4:5':450,'1:1':360,'9:16':640};
 const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],['kesulitan','Tingkat kesulitan'],['streak','Streak'],['kampus','Kampus impian'],['badge','Badge'],['level','Level & EXP'],['username','Nama'],['angkatan','Angkatan']];
-const CORE=[['durasi','Waktu belajar'],['soal','Soal & akurasi'],['streak','Streak & hari aktif'],['growth','Perkembangan'],['materi','Waktu per subtes']];
-const EXTRA=[['kampus','Kampus impian'],['kesulitan','Tingkat kesulitan'],['badge','Badge'],['level','Level & EXP']];
-const NAMEF=[['username','Nama'],['angkatan','Angkatan']];
+const LOCKED=['Nama','Kampus & prodi impian','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
+const SEKUNDER=[['streak','Streak'],['aktif','Hari aktif'],['growth','Perkembangan']];
+const TERSIER=[['kesulitan','Tingkat kesulitan'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
 const TPLS=[['klasik','Klasik','Satu angka besar, seperti kartu streak'],['log','Study Log','Rapi ala catatan harian'],['stat','Statistik','Grafik harian + angka ringkas'],['kam','Menuju Kampus','Fokus ke target PTN dan mastery']];
 const wm='<div class="wm">Gradient<span class="o"><span class="i">UTBK</span></span></div>';
 const who=(f,d)=>f.username?(f.angkatan?`${esc(d.first)} (Angkatan ${d.angkatan})`:esc(d.first)):'Pejuang UTBK';
@@ -461,10 +466,11 @@ const stag=(k)=>`<span class="stag" style="--c:${SUB[k].c}">${k}</span>`;
 const title=(P)=>P.key==='week'?'Update belajar minggu ini':P.key==='day'?'Update belajar hari ini':'Sesi latihan selesai';
 const matLines=(P,max=9)=>{if(!P.subtes.length)return '<div class="sm">Belum ada materi dipelajari</div>';const l=P.subtes.slice(0,max).map(s=>`<div class="mline">${stag(s.k)}<span>${esc(s.topics.join(', '))}</span></div>`);if(P.subtes.length>max)l.push(`<div class="sm">+${P.subtes.length-max} subtes lain</div>`);return l.join('')};
 function diffRows(P){const tot=Object.values(P.diff).reduce((a,[t])=>a+t,0)||1;return Object.entries(P.diff).filter(([,[t]])=>t>0).map(([n,[t,b]])=>`<div style="display:grid;grid-template-columns:50px 1fr 64px;gap:8px;align-items:center;font-size:12px;font-weight:800"><span>${n}</span><div class="mbar"><i style="width:${t/tot*100}%;--c:${DIFFC[n]}"></i></div><b style="font-weight:800;text-align:right">${t} · ${pct(b,t)}%</b></div>`).join('')||'<div class="sm">Belum ada soal</div>'}
-function footR(d,f,s){const out=[];
- if(f.level)out.push(`<span class="cpr">${px('lvl',14)}Lv ${d.level}</span>`);
- if(f.badge){const bl=s.badge?[{name:s.badge}]:(d.hof.length?d.hof:earned()).slice(0,2);bl.forEach(b=>out.push(`<span class="cpr">${px('lvl',14)}${esc(b.name)}</span>`))}
- return out.length?`<div class="ft" style="gap:5px">${out.join('')}</div>`:''}
+function footR(){return ''}
+function idTop(d,f,s){const o=[];
+ if(f.level)o.push(`<span class="cpr">${px('lvl',14)}Lv ${d.level}</span><span class="cpr">${px('coin',14)}${rp(d.exp)} EXP</span>`);
+ if(f.badge){const all=[...d.hof,...d.badges];const imgs=s.badge?[all.find(b=>b.name===s.badge)].filter(Boolean):(d.hof.length?d.hof:d.badges.filter(b=>b.sec==='done')).slice(0,3);if(imgs.length)o.push(`<span class="bgs">${imgs.map(b=>`<img alt="" src="${IMG.b[b.col]||IMG.b[0]}">`).join('')}</span>`)}
+ return o.length?`<div class="idc">${o.join('')}</div>`:''}
 function foot(d,f,s,opts={}){
  const out=[];
  if(f.streak&&!opts.noStreak)out.push(`<span class="cp">${px('flame',16)}${d.streak} hari streak</span>`);
@@ -504,19 +510,20 @@ const TPL={
    ${lines.join('')}${f.materi&&P.subtes.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="sm" style="color:#e5dcff">Materi:</span>${tags}</div>`:''}</div>${foot(d,f,s,{noStreak:f.durasi||f.soal})}</div>`},
  rapor:(d,P,f,s)=>{
   const wk=P.key==='week',dy=P.key==='day',lab=wk?'MINGGU INI':dy?'HARI INI':'SESI LATIHAN';
-  const nm=f.username?esc(d.first):'Pejuang UTBK',ang=f.username&&f.angkatan?`<small>Angkatan ${d.angkatan}</small>`:'';
+  const nm=esc(d.first);
   const acc=pct(P.benar,P.soal),accc=acc>=70?'#4ade80':acc>=50?'#ffc83d':'#ff6a5c',act=d.days.filter(x=>x>0).length;
   const AR=(u)=>`<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><path d="${u?'M5 1l4.2 7.2H.8z':'M5 9L.8 1.8h8.4z'}" fill="currentColor"/></svg>`;
   const dlt=(v,fm)=>`<span class="dl ${v>=0?'up':'dn'}">${AR(v>=0)}${fm(Math.abs(v))}</span>`;
-  const kam=f.kampus?`<div class="kmp"><img class="bl" src="${IMG.bld}" alt=""><span class="lg"><img src="${IMG.itb}" alt=""></span><div class="kt"><b>${esc(d.kampus.ptn)}</b><small>Kampus impian · ${esc(d.kampus.prodi)}</small></div></div>`:'';
+  const kam=`<div class="kmp"><img class="bl" src="${IMG.bld}" alt=""><span class="lg"><img src="${IMG.itb}" alt=""></span><div class="kt"><b>${esc(d.kampus.ptn)}</b><small>Kampus impian · ${esc(d.kampus.prodi)}</small></div></div>`;
   let side='';
-  if(wk)side=d.lastWeekSec>0?`<div class="hs"><span>vs minggu lalu</span>${dlt(P.sec-d.lastWeekSec,fmtDur)}</div>`:`<div class="hs"><span>Minggu pertama</span></div>`;
+  if(!f.growth)side='';else if(wk)side=d.lastWeekSec>0?`<div class="hs"><span>vs minggu lalu</span>${dlt(P.sec-d.lastWeekSec,fmtDur)}</div>`:`<div class="hs"><span>Minggu pertama</span></div>`;
   else if(dy){const avg=Math.round(d.week.sec/7);side=`<div class="hs"><span>vs rata-rata ${fmtDur(avg)}</span>${dlt(P.sec-avg,fmtDur)}</div>`}
-  const hero=f.durasi?`<div class="hero"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="hv"><span>Waktu belajar</span><b>${fmtDur(P.sec)}</b></div>${side}</div>`:'';
+  const hero=`<div class="hero"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="hv"><span>Waktu belajar</span><b>${fmtDur(P.sec)}</b></div>${side}</div>`;
   const tl=(k,v,u,sm,sc)=>`<div class="tl"><span class="tk">${k}</span><b>${v}${u?`<u${u[0]==='/'?' class="sl"':''}>${u}</u>`:''}</b>${sm?`<small${sc?` style="color:${sc}"`:''}>${sm}</small>`:''}</div>`;
   const tiles=[];
-  if(f.streak){tiles.push(tl('Streak',d.streak,' hari'));tiles.push(tl('Hari aktif',act,'/7','minggu ini'))}
-  if(f.soal)tiles.push(tl('Soal',P.soal,'',`${acc}% benar`,accc));
+  if(f.streak)tiles.push(tl('Streak',d.streak,' hari'));
+  if(f.aktif)tiles.push(tl('Hari aktif',act,'/7','minggu ini'));
+  tiles.push(tl('Soal dikerjakan',P.soal,'',`${acc}% benar`,accc));
   const tgrid=tiles.length?`<div class="tl3" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:'';
   let grow='',newm='';
   if(f.growth){
@@ -530,10 +537,10 @@ const TPL={
   }
   const mx=Math.max(...P.subtes.map(x=>x.sec),1);
   const rows=P.subtes.slice(0,3).map(x=>`<div class="sr"><span class="stg" style="--c:${SUB[x.k].c}">${x.k}</span><div class="sb"><i style="width:${x.sec/mx*100}%;background:${SUB[x.k].c}"></i></div><b>${fmtDur(x.sec)}</b></div>`).join('')||'<div class="more">Belum ada materi dipelajari</div>';
-  const mat=f.materi?`<div class="blk"><div class="bh"><span>Waktu per subtes</span><b>${P.materiCount} materi</b></div>${rows}${P.subtes.length>3?`<div class="more">+${P.subtes.length-3} subtes lain</div>`:''}</div>`:'';
+  const mat=`<div class="blk"><div class="bh"><span>Subtes yang dipelajari</span><b>${P.materiCount} materi</b></div>${rows}${P.subtes.length>3?`<div class="more">+${P.subtes.length-3} subtes lain</div>`:''}</div>`;
   const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),tt=dif.reduce((a,[,[t]])=>a+t,0)||1;
   const kes=f.kesulitan?`<div class="blk"><div class="bh"><span>Tingkat kesulitan</span></div><div class="kb">${dif.map(([n,[t]])=>`<i style="width:${t/tt*100}%;background:${DIFFC[n]}"></i>`).join('')}</div><div class="dg">${dif.map(([n,[t,b]])=>`<div><b><em style="background:${DIFFC[n]}"></em>${n}</b><span>${t} soal</span><span>${pct(b,t)}% benar</span></div>`).join('')||'<div>Belum ada soal</div>'}</div></div>`:'';
-  return `<div class="sc c-rpr" style="height:${RATIO[s.ratio]}px"><div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div><div class="nmrow"><span class="nm1">${nm}</span>${ang}</div>${kam}<div class="bd">${hero}${tgrid}${grow}${mat}${kes}</div>${newm}${footR(d,f,s)}</div>`},
+  return `<div class="sc c-rpr" style="height:${RATIO[s.ratio]}px"><div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div><div class="nmrow"><span class="nm1">${nm}</span>${idTop(d,f,s)}</div>${f.sekolah?`<div class="sch">${esc(d.school)}</div>`:''}${kam}<div class="bd">${hero}${tgrid}${grow}${mat}${kes}</div>${newm}${footR(d,f,s)}</div>`},
  klasik:(d,P,f,s)=>{const when=P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'di sesi ini';
   const hero=f.durasi?fmtDur(P.sec):f.soal?String(P.soal):String(d.streak);
   const lbl=f.durasi?`belajar ${when}`:f.soal?`soal dikerjakan ${when}`:'hari beruntun belajar';
@@ -557,15 +564,17 @@ const cardHTML=(lv=0)=>{const d=D(),s=S.st;const h=TPL[s.tpl](d,d[s.period],s.fl
 function makeCaption(){
  const d=D(),s=S.st,P=d[s.period],f=s.flags,L=[],wk=P.key==='week',act=d.days.filter(x=>x>0).length;
  L.push(wk?'update belajar minggu ini':P.key==='day'?'update belajar hari ini':'abis latihan soal');
- if(f.durasi){let x=`- ${fmtDur(P.sec)} belajar`;if(wk&&d.lastWeekSec>0){const df=P.sec-d.lastWeekSec;x+=` (${df>=0?'+':'-'}${fmtDur(Math.abs(df))} dari minggu lalu)`}L.push(x)}
- if(f.soal)L.push(`- ${P.soal} soal${P.soal?` (${pct(P.benar,P.soal)}% benar)`:''}`);
- if(f.streak)L.push(`- streak ${d.streak} hari, aktif ${act}/7 hari`);
+ let x=`- ${fmtDur(P.sec)} belajar`;if(f.growth&&wk&&d.lastWeekSec>0){const df=P.sec-d.lastWeekSec;x+=` (${df>=0?'+':'-'}${fmtDur(Math.abs(df))} dari minggu lalu)`}L.push(x);
+ L.push(`- ${P.soal} soal${P.soal?` (${pct(P.benar,P.soal)}% benar)`:''}`);
+ if(P.subtes.length)L.push(`- subtes: ${P.subtes.map(x=>x.k).join(', ')}`);
+ if(f.streak)L.push(`- streak ${d.streak} hari`);
+ if(f.aktif)L.push(`- aktif ${act}/7 hari`);
  if(f.growth&&P.mastery)L.push(`- mastery ${P.mastery.label||'rata-rata'} ${P.mastery.avg}% (${P.mastery.delta>=0?'naik':'turun'} ${Math.abs(P.mastery.delta)}%)`);
  if(f.growth&&P.skillUp)L.push(`- skill naik: ${P.skillUp.name} +${P.skillUp.delta}%`);
- if(f.materi&&P.subtes.length)L.push(`- materi: ${P.subtes.map(x=>x.k).join(', ')}`);
  if(f.kesulitan&&P.diff.Sulit[0])L.push(`- ${P.diff.Sulit[0]} soal level sulit, ${P.diff.Sulit[1]} bener`);
+ if(f.level)L.push(`- Lv ${d.level}, ${rp(d.exp)} EXP`);
  if(f.badge){const bn=s.badge||(d.hof[0]||earned()[0]||{}).name;if(bn)L.push(`- badge: ${bn}`)}
- if(f.kampus)L.push(`\ntarget: ${d.kampus.short} ${d.kampus.prodi}. pelan2 asal konsisten`);
+ L.push(`\ntarget: ${d.kampus.short} ${d.kampus.prodi}. pelan2 asal konsisten`);
  L.push('\n#studytwt #UTBK2027 #GradientUTBK');
  return L.join('\n');
 }
@@ -588,7 +597,7 @@ function renderStudio(){
  const periods=[['sesi','Sesi ini'],['day','Hari ini'],['week','Minggu ini']].filter(([k])=>k!=='sesi'||s.hasSesi||s.period==='sesi');
  const seg=(act,items,cur)=>`<div role="group" class="flex w-fit gap-1 rounded-full border-2 border-midnight-850 bg-midnight-900 p-1">${items.map(([k,t])=>k===cur?`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="true" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white bg-surface-brand mb-1 px-4 py-2 text-sm leading-5 tracking-[-0.28px] shadow-[0_4px_0_var(--accent-off-purple)] cursor-pointer">${t}</button>`:`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="false" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white border border-midnight-700 bg-midnight-800 px-3 py-2.5 text-xs leading-4.5 hover:bg-midnight-700 cursor-pointer">${t}</button>`).join('')}</div>`;
  const tile=(act,k,t,x,on)=>`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="${on}" class="${FOCUS} rounded-xl border-2 p-3 text-left transition-colors cursor-pointer ${on?'border-brand-300 bg-[rgba(178,133,240,0.18)]':'border-midnight-850 bg-midnight-800/40 hover:bg-midnight-800'}"><span class="font-nunito block text-[15px] font-extrabold text-white">${t}</span><span class="font-nunito-sans block text-xs font-semibold text-white/60">${x}</span></button>`;
- const settings=s.open?`<div class="border-midnight-850 flex flex-col gap-5 rounded-2xl border-2 p-4"><div class="flex flex-col gap-2"><span class="${LBL}">Periode</span>${seg('period',periods,s.period)}</div><div class="flex flex-col gap-2"><span class="${LBL}">Data inti</span><div class="flex flex-wrap gap-2">${CORE.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Tambahan (opsional)</span><div class="flex flex-wrap gap-2">${EXTRA.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div>${s.flags.badge&&!earned().length?'<p class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Belum ada badge diraih, jadi belum ada yang tampil.</p>':''}</div><div class="flex flex-col gap-2"><span class="${LBL}">Tampilkan identitas</span><div class="flex flex-wrap gap-2">${NAMEF.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div></div><div class="flex flex-col gap-2"><label for="cap" class="${LBL}">Caption</label><textarea id="cap" class="${FOCUS} font-nunito-sans min-h-32 w-full resize-y rounded-xl border-2 border-midnight-700 bg-midnight-800 p-3 text-sm font-semibold text-white">${esc(s.caption)}</textarea><div class="flex items-center justify-between"><span class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Tidak pernah diposting otomatis</span><button type="button" data-act="cap-reset" class="${FOCUS} font-nunito text-xs font-extrabold text-[#b79cff] cursor-pointer">Reset caption</button></div></div></div>`:'';
+ const settings=s.open?`<div class="border-midnight-850 flex flex-col gap-5 rounded-2xl border-2 p-4"><div class="flex flex-col gap-2"><span class="${LBL}">Periode</span>${seg('period',periods,s.period)}</div><div class="flex flex-col gap-2"><span class="${LBL}">Utama (selalu tampil)</span><div class="flex flex-wrap gap-2">${LOCKED.map(t=>`<span class="${CAT_OFF} !cursor-default !opacity-80 flex items-center gap-1.5"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t}</span>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Sekunder</span><div class="flex flex-wrap gap-2">${SEKUNDER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div></div><div class="flex flex-col gap-2"><span class="${LBL}">Tersier</span><div class="flex flex-wrap gap-2">${TERSIER.map(([k,t])=>`<button type="button" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}" class="${s.flags[k]?CAT_ON:CAT_OFF}">${t}</button>`).join('')}</div>${s.flags.badge&&!earned().length?'<p class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Belum ada badge diraih, jadi belum ada yang tampil.</p>':''}</div><div class="flex flex-col gap-2"><label for="cap" class="${LBL}">Caption</label><textarea id="cap" class="${FOCUS} font-nunito-sans min-h-32 w-full resize-y rounded-xl border-2 border-midnight-700 bg-midnight-800 p-3 text-sm font-semibold text-white">${esc(s.caption)}</textarea><div class="flex items-center justify-between"><span class="font-nunito-sans text-xs font-semibold text-[#9e98b3]">Tidak pernah diposting otomatis</span><button type="button" data-act="cap-reset" class="${FOCUS} font-nunito text-xs font-extrabold text-[#b79cff] cursor-pointer">Reset caption</button></div></div></div>`:'';
  const ch=(k,l,extra='')=>`<div class="flex w-[74px] flex-col items-center gap-3"><${extra?'a '+extra:'button type="button" data-act="ch-'+k+'"'} class="${FOCUS} flex size-10 items-center justify-center rounded-full border border-midnight-700 bg-midnight-800 text-white transition-colors hover:bg-midnight-700 cursor-pointer" aria-label="${l}">${chIcon(k==='wa'?'wa':k==='ig'?'ig':k==='tw'?'x':k==='cp'?'link':'more')}</${extra?'a':'button'}><span class="font-nunito text-[13px] leading-tight font-bold text-white/90">${l}</span></div>`;
  if(!$('#studio .studio-dlg')){$('#studio').innerHTML=`<div class="studio-dlg ${DLG} sm:max-w-130" role="dialog" aria-label="Bagikan progress belajarmu"><div class="flex items-center justify-between px-6 pt-6"><h2 class="font-nunito text-[22px] leading-tight font-extrabold">Bagikan progress belajarmu</h2>${closeBtn('close-studio')}</div><div class="flex min-h-0 flex-col gap-6 overflow-y-auto p-6" id="sbody"></div></div>`}
  $('#sbody').innerHTML=`<div class="flex flex-col items-center gap-2" id="pv"></div>
@@ -644,7 +653,7 @@ async function exportPng(quiet){
 /* ============ MODAL: HASIL SESI + MASUKAN ============ */
 const FB=[
  {k:'where',q:'Biasanya kamu update progress belajar di mana?',multi:1,o:['X / Twitter','Instagram Story','WhatsApp Status','TikTok','Grup belajar / Discord','Nggak pernah update']},
- {k:'data',q:'Dari data di kartu, mana yang kamu pasti mau tampilkan?',multi:1,o:['Waktu belajar','Banding minggu lalu','Soal dan akurasi','Streak dan hari aktif','Mastery naik','Skill atau materi baru','Waktu per subtes','Tingkat kesulitan','Kampus impian','Badge']},
+ {k:'data',q:'Dari data di kartu, mana yang kamu pasti mau tampilkan?',multi:1,o:['Waktu belajar','Banding minggu lalu','Soal dan akurasi','Streak dan hari aktif','Mastery naik','Skill atau materi baru','Waktu per subtes','Tingkat kesulitan','Kampus impian','Badge','Level dan EXP','Nama sekolah']},
  {k:'cardlook',q:'Tampilan kartunya menurut kamu...',o:['Mau banget diposting','Oke, tapi perlu diubah','Kurang menarik','Nggak bakal diposting']},
  {k:'freq',q:'Seberapa sering kamu bakal share progress?',o:['Tiap hari','Tiap minggu','Sesekali','Nggak bakal']},
  {k:'ease',q:'Prosesnya dari buka sampai posting terasa...',o:['Gampang banget','Cukup gampang','Ribet','Bingung']},
