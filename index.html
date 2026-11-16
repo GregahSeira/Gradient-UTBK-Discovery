@@ -222,7 +222,7 @@ body{font-family:'Nunito',system-ui,sans-serif;color:#fff;-webkit-font-smoothing
 .c-rpr{--bgc:linear-gradient(180deg,#261c48 0,#171421 160px);--fg:#fff;--sf:#221e2f;--bd:#2a253a;--ac:#cdaff6;--up:#4ade80;--dn:#fb923c;--f55:rgba(255,255,255,.55);--f6:rgba(255,255,255,.6);--f65:rgba(255,255,255,.65);--f7:rgba(255,255,255,.7);--f75:rgba(255,255,255,.75);--f8:rgba(255,255,255,.8);--f85:rgba(255,255,255,.85);--f88:rgba(255,255,255,.88);--g1:rgba(255,255,255,.1);--g9:rgba(255,255,255,.9);color:var(--fg)}
 .c-rpr.th-terang{--bgc:linear-gradient(180deg,#ebe3ff 0,#faf8ff 170px);--fg:#1b1535;--sf:#fff;--bd:#e0d6f5;--ac:#5f2bce;--up:#15803d;--dn:#c2410c;--f55:rgba(27,21,53,.55);--f6:rgba(27,21,53,.6);--f65:rgba(27,21,53,.65);--f7:rgba(27,21,53,.7);--f75:rgba(27,21,53,.75);--f8:rgba(27,21,53,.8);--f85:rgba(27,21,53,.85);--f88:rgba(27,21,53,.88);--g1:rgba(27,21,53,.07);--g9:rgba(27,21,53,.07);}
 .c-rpr.th-hitam{--bgc:#0b0b0d;--fg:#fff;--sf:#18181b;--bd:#2e2e33;--ac:#fff;--up:#d4d4d8;--dn:#a1a1aa;--f55:rgba(255,255,255,.55);--f6:rgba(255,255,255,.6);--f65:rgba(255,255,255,.65);--f7:rgba(255,255,255,.7);--f75:rgba(255,255,255,.75);--f8:rgba(255,255,255,.8);--f85:rgba(255,255,255,.85);--f88:rgba(255,255,255,.88);--g1:rgba(255,255,255,.1);--g9:rgba(255,255,255,.9);}
-.c-rpr{--wk:#ff6a5c}.c-rpr.th-terang{--wk:#dc2626}.c-rpr .mb{position:relative}.c-rpr .mb u{position:absolute;left:20%;top:0;bottom:0;border-left:1.5px dashed rgba(255,255,255,.75)}.c-rpr.th-terang .mb u{border-color:rgba(27,21,53,.55)}.c-rpr .mb i.g{background:var(--up)}.c-rpr .mr.wk .mb i.b{background:var(--wk)!important;opacity:.85}.c-rpr .mr.wk .mv{color:var(--wk)}.c-rpr .lg2 i.gn{background:var(--up)}.c-rpr .lg2 i.rd{background:var(--wk);margin-left:6px}.c-rpr.th-terang .lg2 i.gn{background:var(--up)}.c-rpr.th-terang .lg2 i.rd{background:var(--wk)}
+.c-rpr .mb i.g{background:var(--up)}.c-rpr .lg2 i.gn{background:var(--up)}.c-rpr.th-terang .lg2 i.gn{background:var(--up)}
 .c-rpr .wm{color:var(--fg)}.c-rpr .wm .i{color:#fff}.c-rpr .kt b{color:#fff}.c-rpr.th-terang .lg2 i{background:var(--ac)}.c-rpr.th-terang .hero .hv b{color:#fff}
 .c-rpr.th-terang .hero .dl,.c-rpr.th-terang .hero .hs b{color:#86efac!important}
 .c-rpr.th-hitam .hero{background:linear-gradient(135deg,#fafafa,#d4d4d8);box-shadow:0 3px 0 #71717a;color:#0b0b0d}
@@ -544,7 +544,6 @@ function foot(d,f,s,opts={}){
  if(f.badge){const bl=s.badge?[{name:s.badge}]:(d.hof.length?d.hof:earned()).slice(0,3);bl.forEach(b=>out.push(`<span class="cp">${px('lvl',16)}${esc(b.name)}</span>`))}
  return out.length?`<div class="ft">${out.join('')}</div>`:'';
 }
-const WEAK=20,isWeak=(v)=>v>0&&v<WEAK;
 const THC=(s)=>s.theme==='hitam'?'th-hitam':s.theme==='terang'?'th-terang':'';
 const NOTE=(s)=>s.note?`<div class="nt">${esc(s.note)}</div>`:'';
 function NM(d,f,s){const [ch,bg]=idParts(d,f,s),sc=f.sekolah?`<span class="sch">${esc(d.school)}</span>`:'';return `<div class="nmrow">${f.avatar?`<span class="av"><img src="${IMG.av.chisu}" alt=""></span>`:''}<span class="nm1">${esc(dispName(d,s))}</span>${bg}</div>${ch||sc?`<div class="idrow">${ch}${sc}</div>`:''}`}
@@ -618,11 +617,10 @@ const TPL={
   const md=P.mdel||{},rows=Object.entries(d.mastery).map(([k,v])=>({k,cur:v,dl:md[k]||0})).sort((a,b)=>b.dl-a.dl||b.cur-a.cur);
   const up=rows.filter(r=>r.dl>0),best=up[0];
   const hl=up.length?`Mastery naik di <em>${up.length}</em> dari 7 subtes`:'Belum ada kenaikan mastery';
-  const weakUp=rows.filter(r=>isWeak(r.cur)&&r.dl>0).sort((a,b)=>b.dl-a.dl)[0],anyWeak=rows.some(r=>isWeak(r.cur));
-  const sub=weakUp?`Dari zona lemah: ${SUB[weakUp.k].n} <b>${weakUp.cur-weakUp.dl}% → ${weakUp.cur}%</b>`:best?`Paling naik: ${SUB[best.k].n} <b>+${best.dl}%</b>`:'Lanjut latihan biar naik';
-  const mr=rows.map(r=>`<div class="mr${isWeak(r.cur)?' wk':''}"><span class="stg" style="--c:${SUB[r.k].c}">${r.k}</span><div class="mb"><i class="b" style="width:${Math.max(r.cur-r.dl,0)}%;background:${SUB[r.k].c}"></i><i class="g" style="width:${r.dl}%"></i>${isWeak(r.cur)?'<u></u>':''}</div><b class="mv">${r.cur}%</b>${r.dl>0?dltG(r.dl,v=>'+'+v):'<span class="dl fl">tetap</span>'}</div>`).join('');
+  const sub=best?`Paling naik: ${SUB[best.k].n} <b>+${best.dl}%</b>`:'Lanjut latihan biar naik';
+  const mr=rows.map(r=>`<div class="mr"><span class="stg" style="--c:${SUB[r.k].c}">${r.k}</span><div class="mb"><i class="b" style="width:${Math.max(r.cur-r.dl,0)}%;background:${SUB[r.k].c}"></i><i class="g" style="width:${r.dl}%"></i></div><b class="mv">${r.cur}%</b>${r.dl>0?dltG(r.dl,v=>'+'+v):'<span class="dl fl">tetap</span>'}</div>`).join('');
   const sk=(P.skills||[]).slice(0,s.note?1:2).map(x=>`<div class="sk2"><span class="stg" style="--c:${SUB[x.k].c}">${x.k}</span><span class="sn">${esc(x.name)}</span><span class="sv">${x.from}% → ${x.to}%</span>${x.to>x.from?dltG(x.to-x.from,v=>'+'+v):x.to<x.from?dltG(x.to-x.from,v=>v):'<span class="dl fl">tetap</span>'}</div>`).join('');
-  return `<div class="sc c-rpr ${THC(s)} c-mst" style="height:${RATIO[s.ratio]}px">${HD(d,P,f,s)}<div class="hlw"><div class="hl">${hl}</div><div class="hs2">${sub}</div></div><div class="bd"><div class="blk mrb"><div class="bh"><span>Mastery per subtes</span><b class="lg2"><i class="gn"></i>naik${anyWeak?`<i class="rd"></i>lemah &lt;${WEAK}%`:''}</b></div>${mr}</div>${sk?`<div class="blk"><div class="bh"><span>Skill yang naik</span></div>${sk}</div>`:''}</div>${s.note?'':CHIPS(d,P,f)}${NOTE(s)}</div>`},
+  return `<div class="sc c-rpr ${THC(s)} c-mst" style="height:${RATIO[s.ratio]}px">${HD(d,P,f,s)}<div class="hlw"><div class="hl">${hl}</div><div class="hs2">${sub}</div></div><div class="bd"><div class="blk mrb"><div class="bh"><span>Mastery per subtes</span><b class="lg2"><i class="gn"></i>naik minggu ini</b></div>${mr}</div>${sk?`<div class="blk"><div class="bh"><span>Skill yang naik</span></div>${sk}</div>`:''}</div>${s.note?'':CHIPS(d,P,f)}${NOTE(s)}</div>`},
  latsol:(d,P,f,s)=>{
   const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),mxn=Math.max(...dif.map(([,[t]])=>t),1),pd=P.prevDiff||{};
   const sul=P.diff.Sulit||[0,0];
