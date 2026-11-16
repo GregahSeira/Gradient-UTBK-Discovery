@@ -12,8 +12,10 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Token dari variabel Figma: surface-primary `#171421`, surface-secondary `#2a253a`, surface-brand `#5f2bce`, off-purple `#451aa2`, midnight 600/700/800 `#534a70/#3e3754/#2a253a`, brand-300 `#b285f0`, border kartu `#221e2f`.
 - Ikon nav, flame, coin EXP, level diambil dari export UI Gradient.
 
-## Aset yang belum ada (placeholder CSS)
-- Aset gambar Figma tidak bisa diunduh dari lingkungan ini (host `www.figma.com` diblokir proxy): banner, avatar, art badge, logo kampus, ikon subtes.
+## Aset asli dari Figma (tertanam di `const IMG`)
+- File `UTBK 2026 - Assets` (`I06TbUfEcpowPyWkI7Sbdf`): 37 badge rendered (streak, try out, jam fokus, master/khatam per subtes, tri nalar sampai mythic, diamond subtes).
+- File Profile V2: banner profil, avatar (Chisu, Sinta, Raka, Nadia), art gedung kampus, logo ITB.
+- Masih placeholder: ikon tile stat Habit (soal/materi), ikon ringkasan Achievement.
 
 ## Aset baru (eksploratif, bukan dari UI asli)
 - Tombol "Bagikan progress" di tab profil, kartu ajakan di Habit, ikon share di badge Achievement, halaman hasil sesi
