@@ -538,7 +538,7 @@ const RATIO={'3:4':480,'4:5':450,'1:1':360,'9:16':640};
 const HH=(s)=>s.ratio==='auto'?'auto;min-height:480px':RATIO[s.ratio]+'px';
 const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],['kesulitan','Tingkat kesulitan'],['streak','Streak'],['kampus','PTN impian'],['badge','Badge'],['level','Level & EXP'],['username','Nama'],['angkatan','Angkatan']];
 const LOCKED=['Nama','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
-const SEKUNDER=[['streak','Streak'],['growth','Perkembangan mastery'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
+const SEKUNDER=[['streak','Streak'],['growth','Perkembangan mastery'],['level','Badge, level & EXP'],['sekolah','Nama sekolah']];
 const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan'],['benar','Jumlah soal benar'],['avatar','Foto profil']];
 const PRESETS=[['rapor','Ringkasan','Waktu, soal, mastery, dan subtes dalam satu kartu'],['msub','Mastery Subtes','Latihan soal di satu subtes dan hasilnya']];
 const curPreset=(s)=>s.preset==='custom'?'custom':s.tpl;
@@ -911,7 +911,7 @@ document.addEventListener('click',async e=>{
   case 'preset':{s.preset=v;s.tpl=v==='custom'?'rapor':v;s.ratio=v==='custom'?'auto':'3:4';if(v==='custom')s.open=true;else{const kp=s.flags.kampus,sk=s.flags.sekolah;s.flags={...DEFF,kampus:kp,sekolah:sk};s.badge=null}restudio();log('gaya: '+v);break}
   case 'theme':s.theme=v;renderStudio();log('tema: '+v);break;
   case 'ratio':s.ratio=v;restudio();log('ukuran: '+v);break;
-  case 'flag':s.flags[v]=s.flags[v]?0:1;if(v==='badge'&&!s.flags.badge)s.badge=null;restudio();log('data '+v+': '+(s.flags[v]?'on':'off'));break;
+  case 'flag':s.flags[v]=s.flags[v]?0:1;if(v==='level')s.flags.badge=s.flags.level;if(v==='badge'&&!s.flags.badge)s.badge=null;restudio();log('data '+v+': '+(s.flags[v]?'on':'off'));break;
   case 'cap-reset':s.dirty=false;s.caption=makeCaption();renderStudio();break;
   case 'priv':s.privacy=v;renderStudio();log('privasi link: '+v);break;
   case 'save-img':{const ok=await exportPng();if(ok)toast('Gambar siap disimpan');break}
