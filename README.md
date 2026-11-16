@@ -20,7 +20,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 ## Aset baru (eksploratif, bukan dari UI asli)
 - Kartu "Progress belajar" (hari ini dan minggu ini) di tab Ringkasan, masing-masing dengan tombol Bagikan
 - Tombol "Bagikan progress" di tab profil, kartu ajakan di Habit, ikon share di badge Achievement, halaman hasil sesi
-- Data point kartu: banner kampus impian di atas, waktu belajar dengan banding minggu lalu (atau rata-rata harian), streak, hari aktif, soal dan akurasi, mastery naik, skill naik, materi baru, waktu per subtes. Tingkat kesulitan, badge, dan level jadi opsional.
+- Data point kartu: banner kampus impian di atas, waktu belajar dengan banding minggu lalu (atau rata-rata harian), streak, hari aktif, soal dan akurasi, perkembangan mastery (materi yang naik beserta dari dan ke berapa persen), waktu per subtes dan soal per subtes. Tingkat kesulitan, badge, dan level jadi opsional.
 - Tier data kartu: Utama (terkunci): nama, kampus dan prodi impian, waktu belajar, jumlah soal, subtes. Sekunder: streak, perkembangan, badge dan level dan EXP (di samping nama), nama sekolah. Tersier: hari aktif, tingkat kesulitan. Angkatan dihapus.
 - Eksplorasi tampilan kartu (pilih di Atur isi kartu): Ringkas (default), Mastery naik (bar sebelum dan sesudah per subtes, skill yang naik), Jejak latihan (akurasi per tingkat kesulitan, soal per hari, naik tingkat soal), Highlight (satu kalimat per capaian).
 - Kartu share default: portrait 3:4 (360x480, ekspor 1080x1440) layout rapor ala referensi Alternatifa: waktu belajar dengan target, kubus soal dan akurasi, waktu per subtes, tingkat kesulitan beserta akurasi per level.
