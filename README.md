@@ -42,7 +42,7 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 
 ## Scope MVP (V1)
 - Hanya 2 gaya kartu: Ringkasan (default) dan Mastery Subtes.
-- Mastery Subtes: pilih 1 subtes (bawaan: subtes yang paling naik). Grafik cincin besar: persen mastery di tengah, warna subtes untuk nilai sebelumnya, hijau untuk bagian yang naik, teks "dari X%". Di bawahnya soal dan persen benar subtes itu, waktu belajar subtes itu, maksimal 2 materi yang naik, dan streak.
+- Mastery Subtes: fokus ke effort latihan soal, hasil sebagai akibatnya. Pilih 1 subtes (bawaan: subtes dengan soal terbanyak). Judul besar "44 soal PK minggu ini" plus waktu belajar. Grafik kotak: tiap kotak = 1 soal (2 soal kalau lebih dari 96), warna = tingkat kesulitan, pudar = salah. Blok "Hasilnya": mastery subtes dari dan ke, plus 1 materi yang paling naik. Lalu streak. Sebaran tingkat kesulitan per subtes masih data contoh hasil skala dari total.
 - Materi, Custom (fokus subtes atau materi, ukuran Otomatis), Mastery gabungan, Jejak latihan, dan Highlight disimpan di kode untuk versi berikutnya, tidak tampil di pilihan.
 
 ## Ditinjau lagi di akhir
