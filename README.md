@@ -51,6 +51,12 @@ Prototype satu file (`index.html`) untuk menguji fitur "bagikan progress belajar
 - Satu panel, tiap baris: label kiri, kontrol kanan. Periode, Ukuran (3:4 Feed, 9:16 Story), Mastery (tingkat + jumlah baris dalam satu baris), Tema (3 lingkaran warna), Tampilkan (7 chip, yang mati dicoret), Nama, Catatan, lalu caption disembunyikan di "Edit caption".
 - Data terkunci tidak lagi muncul sebagai opsi.
 
+### Section Progress belajar (profil, tab Ringkasan)
+- 3 tab: Hari ini, 7 hari terakhir, 30 hari terakhir.
+- Ringkasan 2x2: Waktu belajar (selisih dari rerata, atau rata-rata per hari untuk 30 hari), Soal dikerjakan (% benar), Streak (Hari ini) atau Hari aktif (7 dan 30 hari), Mastery naik.
+- Baris "Paling banyak: subtes (waktu)" dan link "Lihat selengkapnya di Habit" (rentang grafik Habit ikut 7 atau 30 hari).
+- Tombol Bagikan di judul: Hari ini membuka kartu harian, 7 dan 30 hari membuka kartu mingguan (kartu 30 hari belum ada). Angka 30 hari (soal, benar, materi naik) masih data contoh.
+
 ## Ditinjau lagi di akhir
 - Masukan kkaocarpenter: tambah persentase soal dikerjakan, jangan cuma lama waktu belajar. Maksud persisnya belum jelas (kartu sudah punya jumlah soal dan persen benar). Kalau maksudnya persen terhadap target soal harian, butuh data target yang belum ada.
 - Masukan njanjanja26: mapel sulit ditandai merah lalu tampil kalau ada peningkatan. Dibatalkan sementara karena risiko kartu terlihat negatif untuk mastery rendah tanpa peningkatan.
