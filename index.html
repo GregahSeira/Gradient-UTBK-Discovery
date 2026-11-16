@@ -1,0 +1,567 @@
+<title>Gradient Share Progress</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nunito:wght@500;600;700;800&family=Urbanist:wght@600;700;800;900&display=swap">
+<style>
+/* Layout: shell Gradient (sidebar kiri + konten) dengan studio share sebagai modal dua kolom (preview kartu + kontrol). */
+:root{
+  --bg:#0d0b16; --side:#110f1f; --surface:#171430; --surface2:#1e1a3a;
+  --line:#2a2545; --line2:#3a3350; --fg:#f2f0fa; --mut:#9e98b3; --mut2:#c9c4d9;
+  --brand:#b79cff; --brand-d:#8753f5; --brand-bg:#33246e;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#fb7185;
+  --f-display:'Urbanist',system-ui,sans-serif; --f-body:'Nunito',system-ui,sans-serif; --f-mono:'DM Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;font-weight:800;text-wrap:balance}
+p{margin:0}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.125em}
+.mono{font-family:var(--f-mono)}
+.mut{color:var(--mut)}
+.row{display:flex;align-items:center;gap:10px}
+.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+
+/* prototype bar */
+.proto{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:#07060d;border-bottom:1px solid var(--line);font-size:13px;position:sticky;top:env(safe-area-inset-top,0px);z-index:30}
+.proto b{font-family:var(--f-display);font-size:14px}
+.proto .tag{font-family:var(--f-mono);font-size:11px;color:var(--brand);border:1px solid var(--brand-bg);border-radius:99px;padding:2px 8px}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.seg button{padding:6px 12px;border-radius:7px;font-weight:700;font-size:13px;color:var(--mut2)}
+.seg button[aria-pressed="true"]{background:var(--brand-bg);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:12px;font-weight:800;font-size:14px;border:2px solid var(--line2);background:var(--surface);transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--brand)}
+.btn.pri{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+.btn.pri:hover{background:#9a6bff;border-color:#9a6bff}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.banner{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--brand-bg);border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:14px}
+.banner ul{margin:6px 0 0;padding-left:18px;color:var(--mut2)}
+
+/* shell */
+.shell{display:flex;min-height:calc(100vh - 54px)}
+.side{display:none;width:250px;flex:none;background:var(--side);border-right:2px solid #1c1833;padding:24px 16px;flex-direction:column;justify-content:space-between;position:sticky;top:54px;height:calc(100vh - 54px)}
+.switch{display:flex;align-items:center;justify-content:space-between;border:2px solid var(--line);border-radius:12px;padding:12px 14px;font-family:var(--f-display);font-weight:800}
+.pill{background:linear-gradient(90deg,#32257c,#4442b1,#5f6bdf);border-radius:99px;padding:2px 8px;font-size:12px;font-weight:700;margin-left:8px;font-family:var(--f-body)}
+.nav{display:flex;flex-direction:column;gap:4px;margin-top:20px}
+.nav button{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;color:var(--mut2);font-weight:700;text-align:left;font-size:15px}
+.nav button svg{color:var(--mut);font-size:18px}
+.nav button:hover{background:rgba(255,255,255,.04);color:#fff}
+.nav button[aria-current="page"]{background:rgba(255,255,255,.07);color:#fff;font-weight:800}
+.nav button[aria-current="page"] svg{color:var(--brand)}
+.main{flex:1;min-width:0}
+.mainin{max-width:980px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-right,0px)) 110px max(16px,env(safe-area-inset-left,0px))}
+.top{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-bottom:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.chip svg{font-size:16px}
+.avbtn{display:inline-grid}
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--side);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:20}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--mut);padding:4px 8px}
+.tabbar svg{font-size:20px}
+.tabbar button[aria-current="page"]{color:var(--brand)}
+@media(min-width:1024px){.side{display:flex}.tabbar{display:none}.avbtn{display:none}.mainin{padding-bottom:60px}}
+
+/* profile */
+.av{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:36px;background:hsl(var(--h,262) 55% 32%);border:3px solid var(--brand-bg);flex:none}
+.phead{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.phead h1{font-size:26px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs button{padding:10px 16px;font-weight:800;color:var(--mut);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:#fff;border-color:var(--brand)}
+.grid{display:grid;gap:16px}
+@media(min-width:760px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.card h3{font-size:17px}
+.kick{font-family:var(--f-display);font-weight:800;font-size:12px;letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.bar{height:8px;background:#26213f;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--brand-d)}
+.stat{font-family:var(--f-display);font-weight:900;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.nudge{background:linear-gradient(135deg,#2a1f63,#1b1740);border:1px solid #4a3a9a;border-radius:16px;padding:18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.nudge .grow h3{font-size:18px;margin-bottom:4px}
+.chart{display:flex;align-items:flex-end;gap:6px;height:150px;margin-top:14px;border-bottom:1px solid var(--line)}
+.chart .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-width:0}
+.chart .col i{display:block;border-radius:5px 5px 0 0;background:var(--brand-d);min-height:2px}
+.chart .col.dim i{background:#3b2f78}
+.xl{display:flex;gap:6px;margin-top:6px;font-size:11px;color:var(--mut);font-family:var(--f-mono)}
+.xl span{flex:1;text-align:center;min-width:0}
+.badge{display:flex;gap:12px;align-items:center}
+.hex{width:52px;height:52px;display:grid;place-items:center;flex:none;background:linear-gradient(160deg,#5f6bdf,#8753f5);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);color:#fff;font-size:22px}
+.hex.off{background:#2a2545;color:var(--mut)}
+.achv{display:flex;flex-direction:column;gap:10px}
+.stag{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:500;color:#0d0b16;background:var(--c);border-radius:5px;padding:1px 6px}
+.sub{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.empty{color:var(--mut);font-size:13px}
+.dlist{display:grid;gap:8px}
+
+/* overlay + studio */
+.overlay{position:fixed;inset:0;background:rgba(4,3,10,.78);z-index:50;display:flex;align-items:stretch;justify-content:center;overflow:auto}
+.sheet{background:var(--bg);width:100%;max-width:1060px;margin:auto;border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;max-height:100%}
+@media(max-width:760px){.overlay{align-items:flex-end}.sheet{border-radius:20px 20px 0 0;max-height:96%}}
+.sh-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:20px;flex:1}
+.sh-body{display:grid;gap:0;overflow:auto;min-height:0;grid-template-columns:minmax(0,1fr)}
+.sh-body>*{min-width:0}
+.sheet{overflow:hidden}
+@media(min-width:900px){.sh-body{grid-template-columns:minmax(0,420px) minmax(0,1fr);overflow:hidden}.sh-body>*{overflow:auto;max-height:calc(100vh - 110px)}}
+.pv{padding:20px;background:#0a0814;display:flex;flex-direction:column;align-items:center;gap:12px}
+.pvbox{display:flex;justify-content:center;max-width:100%}
+.ctl{padding:20px;display:flex;flex-direction:column;gap:20px}
+.fld>label,.fld>.lbl{display:block;font-weight:800;font-size:13px;margin-bottom:8px;color:var(--mut2)}
+.opts{display:grid;gap:8px}
+.o4{grid-template-columns:repeat(2,1fr)}
+.o3{grid-template-columns:repeat(3,1fr)}
+.opt{border:2px solid var(--line);border-radius:12px;padding:10px 12px;text-align:left;background:var(--surface);min-width:0}
+.opt:hover{border-color:var(--line2)}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:#221b4a}
+.opt b{display:block;font-family:var(--f-display);font-size:14px}
+.opt span{display:block;font-size:12px;color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.tg{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--line);border-radius:99px;padding:6px 12px;font-weight:700;font-size:13px;background:var(--surface);color:var(--mut2)}
+.tg[aria-pressed="true"]{border-color:var(--brand);background:#221b4a;color:#fff}
+.tg[aria-pressed="false"]{opacity:.75}
+.tg svg{font-size:14px}
+textarea{width:100%;min-height:150px;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px;color:var(--fg);font:inherit;font-size:14px;resize:vertical}
+.acts{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.acts .pri{grid-column:1/-1;padding:14px}
+.warn{display:flex;gap:8px;align-items:center;background:#3a2a0a;color:#fde68a;border-radius:10px;padding:8px 12px;font-size:13px}
+.hint{font-size:12px;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#f2f0fa;color:#16132a;padding:10px 16px;border-radius:12px;font-weight:800;font-size:14px;z-index:90;max-width:calc(100% - 32px);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.linkrow{display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:8px 8px 8px 12px;font-family:var(--f-mono);font-size:13px}
+.linkrow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q{padding:14px 0;border-bottom:1px solid var(--line)}
+.q:last-child{border:0}
+.q h4{font-size:15px;margin-bottom:8px}
+.stage{position:fixed;left:-10000px;top:0;pointer-events:none}
+
+/* ===== KARTU SHARE (lebar tetap 360, diekspor 3x = 1080px) ===== */
+.sc{width:360px;padding:20px;display:flex;flex-direction:column;gap:14px;overflow:hidden;border-radius:26px;font-family:var(--f-body);color:#f2f0fa;position:relative}
+.sc svg.i{stroke-width:2.2}
+.sc .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sc>*{flex-shrink:0}
+.sc .bd{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.sc .ft{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sc .brand{display:flex;align-items:center;font-family:var(--f-display);font-weight:900;font-size:17px}
+.sc .brand i{font-style:normal;font-family:var(--f-body);font-weight:800;font-size:11px;background:linear-gradient(90deg,#32257c,#5f6bdf);border-radius:99px;padding:2px 8px;margin-left:6px;color:#fff}
+.sc .sm{font-size:12px;color:#c9c4d9}
+.sc .who{font-weight:800;font-size:13px;color:#c9c4d9}
+.sc .cp{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border-radius:99px;padding:5px 11px;font-weight:800;font-size:12px}
+.sc .cp svg{font-size:14px}
+.sc .mline{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:700}
+.sc .stag{flex:none}
+.sc .mbar{height:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+.sc .mbar i{display:block;height:100%;border-radius:99px;background:var(--c,#8753f5)}
+/* log */
+.c-log{background:#12101f;border:1px solid #2f2a4d}
+.c-log h3{font-size:22px;line-height:1.1}
+.c-log .lr2{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+.c-log .rows{display:flex;flex-direction:column;gap:12px}
+.c-log .lr{display:flex;flex-direction:column;gap:5px;border-top:1px dashed #3a3350;padding-top:9px}
+.c-log .lr .l{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:#9e98b3;font-weight:700}
+.c-log .lr .v{font-family:var(--f-mono);font-size:18px;color:#f2f0fa;font-weight:500}
+/* stat */
+.c-stat{background:linear-gradient(170deg,#1c1840,#100e22)}
+.c-stat .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.c-stat .tile{background:rgba(255,255,255,.07);border-radius:12px;padding:10px 11px}
+.c-stat .tile.w2{grid-column:1/-1}
+.c-stat .tile b{display:block;font-family:var(--f-display);font-size:23px;font-weight:900;line-height:1.05}
+.c-stat .tile span{font-size:12px;color:#c9c4d9;font-weight:700}
+.c-stat .ch{display:flex;align-items:flex-end;gap:7px;height:62px}
+.c-stat .ch div{flex:1;border-radius:5px;background:#4a3d94;min-height:3px}
+.c-stat .ch div.on{background:#b79cff}
+.c-stat .cl{display:flex;gap:7px;font-size:10px;color:#9e98b3;font-family:var(--f-mono)}
+.c-stat .cl span{flex:1;text-align:center}
+.c-stat .stk{display:flex;height:12px;border-radius:99px;overflow:hidden;gap:2px}
+.c-stat .stk i{display:block;height:100%}
+.c-stat .lg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;font-weight:700;color:#c9c4d9}
+.c-stat .lg em{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:5px}
+/* poster */
+.c-post{background:linear-gradient(160deg,#2b1c78 0%,#5a3cd0 55%,#8753f5 100%)}
+.c-post .big{font-family:var(--f-display);font-weight:900;font-size:72px;line-height:.95;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.c-post .big small{font-size:28px;font-weight:800;letter-spacing:0}
+.c-post .lead{font-family:var(--f-display);font-weight:800;font-size:15px;color:#e5dcff;margin-bottom:6px}
+.c-post .ln{font-family:var(--f-display);font-weight:800;font-size:20px;line-height:1.15}
+.c-post .ln small{display:block;font-size:13px;font-weight:700;color:#dcd0ff;font-family:var(--f-body)}
+.c-post .cp{background:rgba(255,255,255,.18)}
+/* kampus */
+.c-kam{background:#f4f0ff;color:#1b1535}
+.c-kam .sm,.c-kam .who{color:#5b5478}
+.c-kam .brand{color:#1b1535}
+.c-kam .cp{background:#e4dbff;color:#33246e}
+.c-kam .mbar{background:#ddd4f5}
+.c-kam .mline{color:#1b1535}
+.c-kam h3{font-size:23px;line-height:1.08;color:#1b1535}
+.c-kam .kk{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:#6a4fd1}
+.c-kam .ms{display:grid;grid-template-columns:44px 1fr 34px;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#1b1535}
+.c-kam .ms b{font-family:var(--f-mono);font-weight:500;text-align:right}
+.c-kam .sline{display:flex;gap:6px;flex-wrap:wrap;font-weight:800;font-size:13px;color:#1b1535}
+.c-kam .sline span{background:#fff;border-radius:10px;padding:6px 10px}
+.c-kam .stag{color:#1b1535}
+/* auto-padat saat isi terlalu banyak */
+.sc.d1{padding:16px;gap:9px}
+.d1 .bd{gap:9px}.d1 h3{font-size:19px!important}.d1 .lr{padding-top:6px;gap:3px}.d1 .lr .v{font-size:15px}.d1 .lr .l{font-size:12px}
+.d1 .mline{font-size:12px}.d1 .tile b{font-size:18px}.d1 .tile{padding:7px 9px}.d1 .ch{height:40px}.d1 .big{font-size:56px}
+.d1 .ln{font-size:17px}.d1 .ln small{font-size:11px}.d1 .ms{font-size:10px}.d1 .cp{padding:3px 8px;font-size:11px}.d1 .ft{gap:6px}.d1 .sm{font-size:11px}.d1 .lg{font-size:11px;gap:8px}
+.sc.d2{padding:14px;gap:6px}
+.d2 .bd{gap:6px}.d2 .bd>div{gap:4px!important}.d2 .mline:nth-child(n+3){display:none}.d2 .lr .v{font-size:13px}.d2 .ch{height:26px}.d2 .big{font-size:44px}
+.d2 .ln small{display:none}.d2 .brand{font-size:14px}.d2 .sline span{padding:3px 7px;font-size:11px}.d2 .tile span{font-size:10px}.d2 .tile b{font-size:15px}
+.c-kam.d2 .ms{font-size:9px}.c-kam.d2 h3{font-size:16px!important}.c-kam.d2 .bd>div{gap:3px!important}.c-kam.d2 .sline span{padding:2px 6px}.d2 .mbar{height:5px}.c-kam.d1 .bd>div>.sm{display:none}.c-kam.d1 .kk{display:none}
+@media(max-width:640px){.proto{position:static}.proto .tag{display:none}.phead>.row{width:100%}.phead h1{font-size:22px;overflow-wrap:anywhere}.phead .grow{flex-basis:160px}}
+</style>
+
+<div id="app"></div>
+<div id="studio" class="overlay" hidden></div>
+<div id="modal" class="overlay" hidden></div>
+<div class="stage" id="stage" aria-hidden="true"></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+/* ============ DATA ============ */
+const SUB={PU:{n:'Penalaran Umum',c:'#b79cff'},PK:{n:'Pengetahuan Kuantitatif',c:'#fbbf24'},PM:{n:'Penalaran Matematika',c:'#2dd4bf'},LBI:{n:'Literasi Bahasa Indonesia',c:'#f472b6'},LBE:{n:'Literasi Bahasa Inggris',c:'#fb923c'},PBM:{n:'Pemahaman Bacaan & Menulis',c:'#a3e635'},PPU:{n:'Pengetahuan & Pemahaman Umum',c:'#38bdf8'}};
+const DAYS=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+const TARGET=15*3600;
+const DIFFC={Mudah:'#4ade80',Sedang:'#fbbf24',Sulit:'#fb7185'};
+const m=(x)=>x*60;
+const DATA={
+ rajin:{label:'Rajin belajar',user:'haters-wowowiwi',streak:12,exp:1240,level:8,
+  kampus:{ptn:'Universitas Indonesia',prodi:'Manajemen'},
+  mastery:{PU:41,PPU:12,PBM:20,PK:56,LBI:47,LBE:8,PM:62},
+  days:[95,120,45,150,80,190,125].map(m),
+  badges:[{id:'streak7',name:'Streak 7 Hari',desc:'Belajar 7 hari berturut-turut.',done:1,cur:7,max:7},{id:'fokus10',name:'Jam Fokus 10',desc:'Belajar 10 jam.',done:1,cur:10,max:10},{id:'to1',name:'Try Out UTBK 1',desc:'Selesaikan 1 try out UTBK.',done:1,cur:1,max:1},
+   {id:'streak30',name:'Streak 30 Hari',desc:'Belajar 30 hari berturut-turut.',cur:12,max:30},{id:'fokus50',name:'Jam Fokus 50',desc:'Belajar 50 jam.',cur:31,max:50},{id:'khatampk',name:'Khatam PK',desc:'Tuntaskan semua video dan quiz di subtes PK.',cur:64,max:100,pct:1},{id:'khatampm',name:'Khatam PM',desc:'Tuntaskan semua video dan quiz di subtes PM.',cur:71,max:100,pct:1},{id:'masterpm',name:'Master PM',desc:'Lulus Tes Akhir PM.',cur:0,max:1},{id:'to3',name:'Try Out UTBK 3',desc:'Selesaikan 3 try out UTBK.',cur:1,max:3}],
+  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',sec:m(805),soal:214,benar:155,materiCount:11,
+   subtes:[{k:'PM',soal:74,topics:['Barisan & Deret','Peluang']},{k:'PK',soal:58,topics:['Perbandingan','Aritmetika Sosial']},{k:'PU',soal:46,topics:['Penalaran Deduktif']},{k:'LBI',soal:36,topics:['Ide Pokok','Kalimat Efektif']}],
+   diff:{Mudah:[76,69],Sedang:[88,63],Sulit:[50,23]}},
+  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',sec:m(125),soal:24,benar:19,materiCount:3,
+   subtes:[{k:'PM',soal:14,topics:['Barisan & Deret','Peluang']},{k:'PK',soal:10,topics:['Perbandingan']}],
+   diff:{Mudah:[9,8],Sedang:[10,8],Sulit:[5,3]}},
+  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan PM, 15 Nov 2026',sec:520,soal:10,benar:7,materiCount:1,
+   subtes:[{k:'PM',soal:10,topics:['Barisan & Deret']}],diff:{Mudah:[3,3],Sedang:[5,4],Sulit:[2,0]}}},
+ baru:{label:'Baru mulai (akun asli sekarang)',user:'haters-wowowiwi',streak:1,exp:85,level:1,
+  kampus:{ptn:'Universitas Indonesia',prodi:'Manajemen'},
+  mastery:{PU:0,PPU:0,PBM:0,PK:6,LBI:0,LBE:0,PM:9},
+  days:[0,0,0,0,0,0,52],
+  badges:[{id:'streak7',name:'Streak 7 Hari',desc:'Belajar 7 hari berturut-turut.',cur:1,max:7},{id:'streak30',name:'Streak 30 Hari',desc:'Belajar 30 hari berturut-turut.',cur:1,max:30},{id:'fokus10',name:'Jam Fokus 10',desc:'Belajar 10 jam.',cur:0,max:10},{id:'khatampu',name:'Khatam PU',desc:'Tuntaskan semua video dan quiz di subtes PU.',cur:7,max:100,pct:1},{id:'khatampk',name:'Khatam PK',desc:'Tuntaskan semua video dan quiz di subtes PK.',cur:1,max:100,pct:1}],
+  week:{key:'week',label:'Minggu ini',range:'9 - 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]}},
+  day:{key:'day',label:'Hari ini',range:'Min, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]}},
+  sesi:{key:'sesi',label:'Sesi ini',range:'Latihan PM, 15 Nov 2026',sec:52,soal:5,benar:0,materiCount:0,subtes:[],diff:{Mudah:[2,0],Sedang:[3,0],Sulit:[0,0]}}}
+};
+const SERIES=[52,70,0,105,88,140,60,110,0,95,120,45,150,80,190,125,60,0,90,130,75,160,100,45,0,115,150,95,70,140].map(x=>x*60); // 30 hari, 7 terakhir = minggu ini
+
+/* ============ STATE ============ */
+const S={persona:'rajin',page:'profil',tab:'habit',range:7,banner:true,
+ st:{period:'week',tpl:'log',ratio:'4:5',flags:{durasi:1,soal:1,materi:1,kesulitan:1,streak:1,kampus:1,badge:0,level:0,username:1},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
+ log:[],fb:{}};
+try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
+const D=()=>DATA[S.persona];
+const log=(x)=>S.log.push(x);
+
+/* ============ UTIL ============ */
+const IC={
+ upload:'<path d="M12 15V3M7 8l5-5 5 5M5 21h14"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+ clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',check:'<path d="M20 6 9 17l-5-5"/>',copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+ download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+ book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+ ticket:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 10h3M8 14h8"/>',radio:'<circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4"/>',
+ bot:'<rect x="3" y="8" width="18" height="12" rx="3"/><path d="M12 8V4M8 14v2M16 14v2"/>',user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+ more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',bolt:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',hex:'<path d="M12 2l8 4.5v9L12 22l-8-6.5v-9z"/><path d="m12 8 1.2 2.6 2.8.3-2.1 1.9.6 2.8L12 14.2 9.5 15.6l.6-2.8L8 10.9l2.8-.3z"/>',
+ pencil:'<path d="M17 3l4 4L7 21H3v-4z"/>',lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>',cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+ star:'<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1z"/>',file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+ pie:'<path d="M21 12A9 9 0 1 1 12 3v9z"/>',eye:'<path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+};
+const ico=(n,c='')=>`<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]||''}</svg>`;
+const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=(n)=>String(n).padStart(2,'0');
+function fmtDur(s){if(s<60)return s+' dtk';const h=Math.floor(s/3600),mi=Math.round((s%3600)/60);if(h&&mi===60)return (h+1)+'j 00m';return h?`${h}j ${pad(mi)}m`:`${mi}m`}
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const $=(s,r=document)=>r.querySelector(s);
+let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2400)}
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}a.remove();return ok}}
+const avatar=(sz)=>`<span class="av" style="--h:262;${sz?`width:${sz}px;height:${sz}px;font-size:${sz*.43}px`:''}">${esc(D().user[0].toUpperCase())}</span>`;
+const earned=()=>D().badges.filter(b=>b.done);
+
+/* ============ SHELL ============ */
+function chips(){const d=D();return `<span class="chip" title="Streak">${ico('flame')}<span style="color:#fb923c">${d.streak}</span> hari</span><span class="chip">${ico('bolt')}<span style="color:#fbbf24">${d.exp}</span> EXP</span><span class="chip">${ico('hex')}<span style="color:var(--brand)">Lv ${d.level}</span></span>`}
+const NAV=[['mastery','Mastery','target'],['materi','Materi','book'],['tryout','Tryout','ticket'],['live','Live Classes','radio'],['copilot','Copilot AI','bot'],['profil','Profil','user']];
+function render(){
+ const cur=S.page==='latsol'?'mastery':'profil';
+ $('#app').innerHTML=`
+ <div class="proto"><b>Gradient UTBK</b><span class="tag">Prototype discovery: share progress belajar</span><span class="grow"></span>
+  <span class="seg" role="group" aria-label="Data contoh">${Object.keys(DATA).map(k=>`<button data-act="persona" data-v="${k}" aria-pressed="${S.persona===k}">${k==='rajin'?'Data rajin':'Data baru mulai'}</button>`).join('')}</span>
+  <button class="btn sm pri" data-act="fb-open">${ico('msg')} Kasih masukan</button></div>
+ <div class="shell">
+  <aside class="side"><div><div class="switch"><span>Gradient<span class="pill">UTBK</span></span>${ico('chev')}</div>
+   <nav class="nav" aria-label="Menu utama">${NAV.map(([id,t,ic])=>`<button data-act="nav" data-v="${id}" ${(id==='mastery'&&cur==='mastery')||(id==='profil'&&cur==='profil')?'aria-current="page"':''}>${ico(ic)}<span>${t}</span></button>`).join('')}</nav></div>
+   <button class="btn ghost" data-act="nav" data-v="lainnya">${ico('more')} Lainnya</button></aside>
+  <main class="main"><div class="mainin">
+   <div class="top">${chips()}<button class="avbtn" data-act="nav" data-v="profil" aria-label="Profil">${avatar(34)}</button></div>
+   ${S.banner?banner():''}
+   ${S.page==='profil'?profile():latsol()}
+  </div></main></div>
+ <nav class="tabbar" aria-label="Menu">${[['mastery','Mastery','target'],['materi','Materi','book'],['tryout','Try Out','ticket'],['live','Live Class','radio'],['lainnya','Lainnya','more']].map(([id,t,ic])=>`<button data-act="nav" data-v="${id}" ${id==='mastery'&&cur==='mastery'?'aria-current="page"':''}>${ico(ic)}${t}</button>`).join('')}</nav>`;
+}
+function banner(){return `<div class="banner">${ico('star','')}<div class="grow"><b>Ini prototype, bukan produk jadi.</b> Coba bagikan progress belajarmu lewat 4 titik masuk:
+ <ul><li>Tombol <b>Bagikan progress</b> di Profil</li><li>Kartu ajakan di tab <b>Habit</b></li><li>Setelah selesai sesi di <b>Latihan Soal</b> (menu Mastery)</li><li>Ikon bagikan di tab <b>Achievement</b></li></ul>
+ <div class="row wrap" style="margin-top:10px"><button class="btn sm pri" data-act="open-studio" data-origin="banner" data-period="week">Langsung coba</button><button class="btn sm ghost" data-act="banner-x">Tutup</button></div></div></div>`}
+
+/* ============ PROFIL ============ */
+function profile(){
+ const d=D();
+ const head=`<div class="phead">${avatar()}<div class="grow"><h1>${esc(d.user)}</h1><div class="row wrap mut" style="margin-top:4px;font-size:14px"><span>@${esc(d.user)}</span><span class="row" style="gap:5px">${ico('cal')} Bergabung 2025</span></div></div>
+  <div class="row"><button class="btn pri" data-act="open-studio" data-origin="profil-header" data-period="week">${ico('upload')} Bagikan progress</button><button class="btn" aria-label="Edit profil" title="Edit profil (tidak aktif di prototype)" data-act="toast" data-v="Edit profil di luar prototype">${ico('pencil')}</button></div></div>`;
+ const tabs=`<div class="tabs" role="tablist">${[['ringkasan','Ringkasan'],['achievement','Achievement'],['habit','Habit']].map(([id,t])=>`<button role="tab" data-act="tab" data-v="${id}" aria-selected="${S.tab===id}">${t}</button>`).join('')}</div>`;
+ return head+tabs+(S.tab==='ringkasan'?tabRingkasan():S.tab==='achievement'?tabAchv():tabHabit());
+}
+function tabRingkasan(){
+ const d=D(),ms=Object.entries(d.mastery),avg=Math.round(ms.reduce((a,[,v])=>a+v,0)/ms.length),weak=ms.slice().sort((a,b)=>a[1]-b[1])[0],er=earned();
+ return `<div class="grid g2">
+  <div class="card"><div class="kick">Kampus impian</div><div class="row" style="margin-top:10px">${ico('target')}<div><div style="font-family:var(--f-display);font-weight:800;font-size:19px">${esc(d.kampus.ptn)}</div><div class="mut">${esc(d.kampus.prodi)}</div></div></div></div>
+  <div class="card"><div class="kick">Mastery</div><div class="row" style="margin-top:8px;align-items:baseline"><span class="stat">${avg}%</span><span class="mut">rata-rata semua subtes</span></div><div class="hint" style="margin-top:6px">Terlemah: ${SUB[weak[0]].n} (${weak[1]}%)</div></div>
+  <div class="card" style="grid-column:1/-1"><div class="row" style="justify-content:space-between"><div class="kick">Hall of Fame</div></div>
+   ${er.length?`<div class="row wrap" style="margin-top:12px;gap:16px">${er.map(b=>`<div class="badge"><span class="hex">${ico('hex')}</span><b>${b.name}</b></div>`).join('')}</div>`:`<p class="empty" style="margin-top:10px">Belum ada badge untuk dipajang. Raih achievement pertamamu, kamu bisa pajang di sini biar dilihat teman.</p>`}</div></div>`;
+}
+function tabAchv(){
+ const b=D().badges,done=b.filter(x=>x.done).length;
+ const sorted=b.slice().sort((x,y)=>(y.done?1:0)-(x.done?1:0));
+ return `<div class="row wrap" style="margin-bottom:16px;gap:20px"><div><span class="stat">${done}</span> <span class="mut">/ 29 Achievement</span></div><div class="mut">${done} diraih · ${29-done} belum diraih</div></div>
+ <div class="grid g3">${sorted.map(x=>`<div class="card achv"><div class="badge"><span class="hex ${x.done?'':'off'}">${ico('hex')}</span><div class="grow"><b>${x.name}</b><div class="hint">${x.desc}</div></div>${x.done?`<button class="btn sm" data-act="open-studio" data-origin="achievement" data-period="week" data-badge="${x.id}" aria-label="Bagikan ${x.name}" title="Bagikan badge ini">${ico('upload')}</button>`:''}</div>
+  <div class="bar"><i style="width:${Math.min(100,pct(x.cur,x.max))}%"></i></div><div class="hint">${x.pct?x.cur+'%':x.cur+'/'+x.max}${x.done?' · Diraih':''}</div></div>`).join('')}</div>`;
+}
+function series(n){const base=S.persona==='rajin'?SERIES.slice(0,23).concat(D().days):[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0].map((_,i,a)=>i===29?52:0);return base.slice(30-n)}
+function tabHabit(){
+ const d=D(),n=S.range,sr=series(n),mx=Math.max(...sr,60*15),avg=Math.round(sr.reduce((a,b)=>a+b,0)/n);
+ const lab=(i)=>n===7?DAYS[i]:(i%(n===14?2:5)===0?(n-i)+'h':'');
+ const yt=[0.25,0.5,0.75,1].map(f=>fmtDur(Math.round(mx*f/900)*900)).join(' / ');
+ const w=d.week,dd=d.day;
+ return `<div class="nudge"><div class="grow"><h3>${dd.sec>=600?'Hari ini kamu belajar '+fmtDur(dd.sec)+' dan ngerjain '+dd.soal+' soal.':'Mulai dari yang kecil juga bisa dibagikan.'}</h3><p class="mut">${dd.sec>=600?'Mau update progresmu ke timeline?':'Belajar 10 menit lagi biar kartu progresmu lebih rame.'}</p></div>
+  <div class="row wrap"><button class="btn pri" data-act="open-studio" data-origin="habit-nudge" data-period="day">${ico('upload')} Bagikan hari ini</button><button class="btn" data-act="open-studio" data-origin="habit-nudge" data-period="week">Bagikan minggu ini</button></div></div>
+ <div class="card"><div class="row wrap" style="justify-content:space-between"><div><h3>Waktu belajar</h3><div class="hint">${n} hari terakhir (rata-rata ${fmtDur(avg)}/hari)</div></div><div class="seg">${[7,14,30].map(x=>`<button data-act="range" data-v="${x}" aria-pressed="${n===x}">${x} hari</button>`).join('')}</div></div>
+  <div class="chart" role="img" aria-label="Grafik waktu belajar ${n} hari terakhir">${sr.map((v,i)=>`<div class="col ${n===7&&i<6?'':''}"><i style="height:${Math.max(2,v/mx*100)}%"></i></div>`).join('')}</div>
+  <div class="xl">${sr.map((_,i)=>`<span>${n===7?DAYS[i]:(lab(i)?(i+1):'')}</span>`).join('')}</div>
+  <div style="margin-top:18px"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b>Waktu belajar minggu ini</b><span class="mono">${fmtDur(w.sec)} dari 15j target</span></div><div class="bar"><i style="width:${Math.min(100,pct(w.sec,TARGET))}%"></i></div></div></div>
+ <div class="grid g2" style="margin-top:16px"><div class="card"><div class="kick">Soal dikerjakan</div><div class="stat" style="margin-top:6px">${w.soal}</div><div class="hint">${pct(w.benar,w.soal)}% benar</div></div>
+  <div class="card"><div class="kick">Materi dipelajari</div><div class="stat" style="margin-top:6px">${w.materiCount}</div><div class="hint">${w.subtes.length?w.subtes.map(s=>s.k).join(', '):'Belum ada'}</div></div></div>`;
+}
+
+/* ============ LATIHAN SOAL ============ */
+function latsol(){
+ const d=D();
+ const rows=Object.entries(d.mastery).map(([k,v])=>`<div class="sub"><span class="stag" style="--c:${SUB[k].c}">${k}</span><div class="grow"><b>${SUB[k].n}</b></div><span class="mono ${v?'':'mut'}">${v?v+'%':'Belum terukur'}</span></div>`).join('');
+ const w=d.week,wk=d.days;
+ return `<h1 style="font-size:28px;margin-bottom:18px">Latihan Soal</h1>
+ <div class="card" style="margin-bottom:16px"><h3>Kerjakan Tes Diagnostik PU</h3><p class="mut" style="margin:4px 0 12px">Petakan titik awal mastery PU-mu dulu.</p><div class="row wrap"><span class="chip">${ico('file')} 5-15 soal</span><span class="chip">${ico('clock')} Tanpa timer</span></div></div>
+ <div class="grid g2"><div><h3 style="margin-bottom:10px">Pilih subtest</h3><div class="dlist">${rows}</div></div>
+  <div class="dlist" style="align-content:start"><div class="card"><h3>Misi hari ini</h3><p class="hint" style="margin:2px 0 8px">Misi baru 24:00</p>
+   ${[['Jawab 10 soal Latihan','5/10'],['Jawab benar 5 soal','Belum mulai'],['Selesaikan 1 sesi Latihan','Selesai']].map(([t,s])=>`<div class="row" style="justify-content:space-between;padding:6px 0"><span>${t}</span><span class="mut">${s}</span></div>`).join('')}</div>
+   <div class="card"><h3>Aktivitas minggu ini</h3><div class="row" style="gap:18px;margin-top:8px"><div><div class="stat">${w.soal}</div><div class="hint">soal</div></div><div><div class="stat">${pct(w.benar,w.soal)}%</div><div class="hint">akurasi</div></div><div><div class="stat">${wk.filter(x=>x>0).length}</div><div class="hint">hari aktif</div></div></div></div>
+   <div class="card" style="border-style:dashed;border-color:var(--brand)"><div class="kick" style="color:var(--brand)">Khusus prototype</div><p class="mut" style="margin:6px 0 12px">Simulasikan selesai satu sesi latihan untuk lihat titik masuk share dari halaman hasil.</p><button class="btn pri" data-act="sim-sesi">Selesaikan sesi latihan (demo)</button></div></div></div>`;
+}
+function resultModal(){
+ const s=D().sesi;
+ return `<div class="sheet" style="max-width:460px;margin:auto" role="dialog" aria-label="Hasil sesi latihan"><div class="sh-head"><h2>Sesi selesai</h2><button class="btn sm ghost" data-act="modal-x" aria-label="Tutup">${ico('x')}</button></div>
+ <div class="ctl"><div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px">${[['Soal',s.soal],['Benar',s.benar],['Waktu',fmtDur(s.sec)]].map(([l,v])=>`<div class="card" style="padding:12px;text-align:center"><div class="stat" style="font-size:24px">${v}</div><div class="hint">${l}</div></div>`).join('')}</div>
+ <div class="row wrap"><span class="stag" style="--c:${SUB.PM.c}">PM</span><span>Barisan & Deret</span><span class="chip" style="margin-left:auto">${ico('bolt')} +15 EXP</span></div>
+ <button class="btn pri" data-act="open-studio" data-origin="selesai-latsol" data-period="sesi">${ico('upload')} Bagikan sesi ini</button><button class="btn ghost" data-act="modal-x">Nanti saja</button></div></div>`;
+}
+
+/* ============ KARTU ============ */
+const RATIO={'4:5':450,'1:1':360,'9:16':640};
+const FLAGS=[['durasi','Durasi','clock'],['soal','Soal & akurasi','check'],['materi','Materi','book'],['kesulitan','Tingkat kesulitan','pie'],['streak','Streak','flame'],['kampus','Kampus impian','target'],['badge','Badge','hex'],['level','Level & EXP','bolt'],['username','Username','user']];
+const TPLS=[['log','Study Log','Rapi ala catatan, gampang dibaca'],['stat','Statistik','Grafik harian + angka ringkas'],['post','Poster','Satu angka besar, bold'],['kam','Menuju Kampus','Fokus ke target PTN & mastery']];
+const brand='<div class="brand">Gradient<i>UTBK</i></div>';
+const who=(f,d)=>f.username?`@${esc(d.user)}`:'Pejuang UTBK';
+const stag=(k)=>`<span class="stag" style="--c:${SUB[k].c}">${k}</span>`;
+const title=(P)=>P.key==='week'?'Update belajar minggu ini':P.key==='day'?'Update belajar hari ini':'Sesi latihan selesai';
+const matLines=(P,max=9)=>{if(!P.subtes.length)return '<div class="sm">Belum ada materi dipelajari</div>';const l=P.subtes.slice(0,max).map(s=>`<div class="mline">${stag(s.k)}<span>${esc(s.topics.join(', '))}</span></div>`);if(P.subtes.length>max)l.push(`<div class="sm">+${P.subtes.length-max} subtes lain</div>`);return l.join('')};
+function diffRows(P,light){const tot=Object.values(P.diff).reduce((a,[t])=>a+t,0)||1;return Object.entries(P.diff).filter(([,[t]])=>t>0).map(([n,[t,b]])=>`<div class="ms" style="display:grid;grid-template-columns:50px 1fr 64px;gap:8px;align-items:center;font-size:12px;font-weight:800"><span>${n}</span><div class="mbar"><i style="width:${t/tot*100}%;--c:${DIFFC[n]}"></i></div><b class="mono" style="font-weight:500;text-align:right">${t} · ${pct(b,t)}%</b></div>`).join('')||'<div class="sm">Belum ada soal</div>'}
+function foot(d,f,s,opts={}){
+ const out=[];
+ if(f.streak&&!opts.noStreak)out.push(`<span class="cp">${ico('flame')} ${d.streak} hari streak</span>`);
+ if(f.level)out.push(`<span class="cp">${ico('hex')} Lv ${d.level} · ${d.exp} EXP</span>`);
+ if(f.kampus&&!opts.noKampus)out.push(`<span class="cp">${ico('target')} ${esc(d.kampus.ptn.replace('Universitas Indonesia','UI'))} · ${esc(d.kampus.prodi)}</span>`);
+ if(f.badge){const bl=s.badge?d.badges.filter(b=>b.id===s.badge):earned().slice(0,3);bl.forEach(b=>out.push(`<span class="cp">${ico('hex')} ${esc(b.name)}</span>`))}
+ return out.length?`<div class="ft">${out.join('')}</div>`:'';
+}
+const TPL={
+ log:(d,P,f,s)=>`<div class="sc c-log" style="height:${RATIO[s.ratio]}px"><div class="hd">${brand}${f.username?`<span class="who">${who(f,d)}</span>`:''}</div>
+  <div><div class="mono sm" style="letter-spacing:.1em">STUDY LOG · ${P.range}</div><h3 style="margin-top:4px">${title(P)}</h3></div>
+  <div class="bd">
+   ${f.durasi||f.soal?`<div class="lr2">${f.durasi?`<div class="lr"><div class="l">Durasi belajar</div><div class="v">${fmtDur(P.sec)}</div>${P.key==='week'?`<div class="mbar"><i style="width:${Math.min(100,pct(P.sec,TARGET))}%;--c:#b79cff"></i></div>`:''}</div>`:''}${f.soal?`<div class="lr"><div class="l">Soal · akurasi</div><div class="v">${P.soal} · ${pct(P.benar,P.soal)}%</div></div>`:''}</div>`:''}
+   ${f.materi?`<div class="lr"><div class="l">Materi (${P.materiCount})</div><div style="display:flex;flex-direction:column;gap:5px">${matLines(P,3)}</div></div>`:''}
+   ${f.kesulitan?`<div class="lr"><div class="l">Tingkat kesulitan</div><div style="display:flex;flex-direction:column;gap:6px">${diffRows(P)}</div></div>`:''}
+  </div>${foot(d,f,s)}</div>`,
+ stat:(d,P,f,s)=>{const mx=Math.max(...d.days,1);const tiles=[];
+  if(f.durasi)tiles.push(`<div class="tile"><span>Durasi</span><b>${fmtDur(P.sec)}</b></div>`);
+  if(f.soal){tiles.push(`<div class="tile"><span>Soal</span><b>${P.soal}</b></div>`,`<div class="tile"><span>Akurasi</span><b>${pct(P.benar,P.soal)}%</b></div>`)}
+  const tot=Object.values(P.diff).reduce((a,[t])=>a+t,0)||1;
+  return `<div class="sc c-stat" style="height:${RATIO[s.ratio]}px"><div class="hd">${brand}${f.username?`<span class="who">${who(f,d)}</span>`:''}</div>
+  <div class="sm">${P.label} · ${P.range}</div>
+  <div class="bd">${tiles.length?`<div class="tiles" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:''}
+   ${f.durasi?`<div><div class="ch">${d.days.map((v,i)=>`<div class="${P.key==='week'||i===6?'on':''}" style="height:${Math.max(4,v/mx*100)}%"></div>`).join('')}</div><div class="cl">${DAYS.map(x=>`<span>${x[0]}</span>`).join('')}</div></div>`:''}
+   ${f.kesulitan?`<div style="display:flex;flex-direction:column;gap:7px"><div class="stk">${Object.entries(P.diff).filter(([,[t]])=>t>0).map(([n,[t]])=>`<i style="width:${t/tot*100}%;background:${DIFFC[n]}"></i>`).join('')}</div><div class="lg">${Object.entries(P.diff).filter(([,[t]])=>t>0).map(([n,[t,b]])=>`<span><em style="background:${DIFFC[n]}"></em>${n} ${t} (${pct(b,t)}%)</span>`).join('')||'<span>Belum ada soal</span>'}</div></div>`:''}
+   ${f.materi?`<div style="display:flex;flex-direction:column;gap:5px">${matLines(P,3)}</div>`:''}</div>${foot(d,f,s)}</div>`},
+ post:(d,P,f,s)=>{const hero=f.durasi?(P.sec<60?P.sec+'<small> dtk</small>':fmtDur(P.sec).replace(/(\d+)j/,'$1<small>j</small>').replace(/(\d+)m/,'$1<small>m</small>')):f.soal?`${P.soal}<small> soal</small>`:`${d.streak}<small> hari</small>`;
+  const when=P.key==='week'?'minggu ini':P.key==='day'?'hari ini':'di sesi ini';
+  const lbl=f.durasi?`belajar ${when}`:f.soal?`soal dikerjakan ${when}`:'streak belajar';
+  const lines=[];
+  if(f.durasi&&f.soal)lines.push(`<div class="ln">${P.soal} soal<small>${pct(P.benar,P.soal)}% benar</small></div>`);
+  if(f.kesulitan&&P.diff.Sulit[0]>0)lines.push(`<div class="ln">${P.diff.Sulit[0]} soal sulit<small>${pct(P.diff.Sulit[1],P.diff.Sulit[0])}% berhasil ditaklukkan</small></div>`);
+  if(f.streak&&(f.durasi||f.soal))lines.push(`<div class="ln">${d.streak} hari beruntun<small>belum pernah bolos</small></div>`);
+  const tags=P.subtes.slice(0,3).map(x=>`<span class="cp">${x.k}</span>`).join('');
+  return `<div class="sc c-post" style="height:${RATIO[s.ratio]}px"><div class="hd">${brand}${f.username?`<span class="who" style="color:#e5dcff">${who(f,d)}</span>`:''}</div>
+  <div class="bd"><div><div class="lead">${P.range}</div><div class="big">${hero}</div><div class="lead" style="margin:8px 0 0;font-size:17px">${lbl}</div></div>
+   ${lines.join('')}${f.materi&&P.subtes.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="sm" style="color:#e5dcff">Materi:</span>${tags}</div>`:''}</div>${foot(d,f,s,{noStreak:f.durasi||f.soal})}</div>`},
+ kam:(d,P,f,s)=>{const stats=[];if(f.durasi)stats.push(`<span>${fmtDur(P.sec)}</span>`);if(f.soal)stats.push(`<span>${P.soal} soal</span>`,`<span>${pct(P.benar,P.soal)}% benar</span>`);
+  return `<div class="sc c-kam" style="height:${RATIO[s.ratio]}px"><div class="hd">${brand}${f.username?`<span class="who">${who(f,d)}</span>`:''}</div>
+  <div>${f.kampus?`<div class="kk">MENUJU</div><h3 style="margin-top:3px">${esc(d.kampus.ptn)}</h3><div style="font-family:var(--f-display);font-weight:800;font-size:17px;color:#6a4fd1;margin-top:1px">${esc(d.kampus.prodi)}</div>`:`<div class="kk">PERSIAPAN UTBK 2027</div><h3 style="margin-top:3px">Mastery subtes</h3>`}</div>
+  <div class="bd"><div style="display:flex;flex-direction:column;gap:6px">${Object.entries(d.mastery).map(([k,v])=>`<div class="ms"><span>${k}</span><div class="mbar"><i style="width:${Math.max(v,1.5)}%;--c:${SUB[k].c}"></i></div><b>${v}%</b></div>`).join('')}</div>
+   ${f.kesulitan?`<div style="display:flex;flex-direction:column;gap:6px"><div class="sm" style="font-weight:800">${P.label}: tingkat kesulitan</div>${diffRows(P)}</div>`:''}
+   ${f.materi?`<div style="display:flex;flex-direction:column;gap:5px">${matLines(P,2)}</div>`:''}
+   ${stats.length?`<div class="sline">${stats.join('')}</div>`:''}</div>${foot(d,f,s,{noKampus:true})}</div>`}
+};
+const cardHTML=(lv=0)=>{const d=D(),s=S.st;const h=TPL[s.tpl](d,d[s.period],s.flags,s);return lv?h.replace('class="sc ',`class="sc d${lv} `):h};
+
+/* ============ CAPTION ============ */
+function makeCaption(){
+ const d=D(),s=S.st,P=d[s.period],f=s.flags,L=[];
+ L.push(s.period==='week'?'update belajar minggu ini':s.period==='day'?'update belajar hari ini':'abis latihan soal');
+ if(f.durasi)L.push(`- ${fmtDur(P.sec)} belajar`);
+ if(f.soal)L.push(`- ${P.soal} soal${P.soal?` (${pct(P.benar,P.soal)}% benar)`:''}`);
+ if(f.materi&&P.subtes.length)L.push(`- materi: ${P.subtes.map(x=>x.k).join(', ')}`);
+ if(f.kesulitan&&P.diff.Sulit[0])L.push(`- ${P.diff.Sulit[0]} soal level sulit, ${P.diff.Sulit[1]} bener`);
+ if(f.streak)L.push(`- streak ${d.streak} hari`);
+ if(f.badge){const b=s.badge?d.badges.find(x=>x.id===s.badge):earned()[0];if(b)L.push(`- badge baru: ${b.name}`)}
+ if(f.kampus)L.push(`\ntarget: ${d.kampus.ptn.replace('Universitas Indonesia','UI')} ${d.kampus.prodi}. pelan2 asal konsisten`);
+ L.push('\n#studytwt #UTBK2027 #GradientUTBK');
+ return L.join('\n');
+}
+const profileLink=()=>'gradient.academy/u/'+(S.st.flags.username?D().user:'pejuang-utbk');
+
+/* ============ STUDIO ============ */
+function openStudio(origin,period,badge){
+ const s=S.st;s.origin=origin;s.period=period;s.badge=badge||null;s.hasSesi=origin==='selesai-latsol';
+ if(badge){s.flags.badge=1}
+ s.dirty=false;s.caption=makeCaption();log('buka studio dari: '+origin+' ('+period+')');
+ $('#modal').hidden=true;$('#studio').hidden=false;document.body.style.overflow='hidden';renderStudio();
+}
+function closeStudio(){$('#studio').hidden=true;document.body.style.overflow='';$('#studio').innerHTML=''}
+function renderStudio(keepCaption){
+ const s=S.st,d=D();
+ const periods=[['sesi','Sesi ini'],['day','Hari ini'],['week','Minggu ini']].filter(([k])=>k!=='sesi'||s.hasSesi||s.period==='sesi');
+ const ctl=`<div class="ctl">
+  <div class="fld"><span class="lbl">Periode</span><div class="seg" role="group">${periods.map(([k,t])=>`<button data-act="period" data-v="${k}" aria-pressed="${s.period===k}">${t}</button>`).join('')}</div></div>
+  <div class="fld"><span class="lbl">Gaya kartu</span><div class="opts o4">${TPLS.map(([k,t,x])=>`<button class="opt" data-act="tpl" data-v="${k}" aria-pressed="${s.tpl===k}"><b>${t}</b><span>${x}</span></button>`).join('')}</div></div>
+  <div class="fld"><span class="lbl">Ukuran</span><div class="opts o3">${[['4:5','Feed','4:5'],['1:1','Persegi','1:1'],['9:16','Story','9:16']].map(([k,t,x])=>`<button class="opt" data-act="ratio" data-v="${k}" aria-pressed="${s.ratio===k}"><b>${t}</b><span>${x}</span></button>`).join('')}</div></div>
+  <div class="fld"><span class="lbl">Data yang ditampilkan</span><div class="chips">${FLAGS.map(([k,t,ic])=>`<button class="tg" data-act="flag" data-v="${k}" aria-pressed="${!!s.flags[k]}">${ico(ic)} ${t}</button>`).join('')}</div>
+   ${s.flags.badge&&!earned().length?'<div class="hint" style="margin-top:8px">Belum ada badge diraih, jadi tidak ada yang tampil.</div>':''}</div>
+  <div class="fld"><label for="cap">Caption</label><textarea id="cap">${esc(s.caption)}</textarea><div class="row" style="justify-content:space-between;margin-top:6px"><span class="hint">Boleh diedit sebelum disalin</span><button class="btn sm ghost" data-act="cap-reset">Reset caption</button></div></div>
+  <div class="fld"><span class="lbl">Link profil</span><div class="linkrow">${ico('link')}<span>${profileLink()}</span><button class="btn sm" data-act="copy-link">Salin</button></div>
+   <div class="row" style="margin-top:8px"><span class="hint row" style="gap:5px">${ico('eye')} Siapa yang bisa buka:</span><span class="seg">${['Semua orang','Pengikut','Hanya saya'].map(x=>`<button data-act="priv" data-v="${x}" aria-pressed="${s.privacy===x}" style="padding:4px 9px;font-size:12px">${x}</button>`).join('')}</span></div></div>
+  <div class="acts"><button class="btn pri" data-act="save-img">${ico('download')} Simpan gambar (PNG 1080px)</button><button class="btn" data-act="copy-cap">${ico('copy')} Salin caption</button><a class="btn" id="xlink" target="_blank" rel="noopener" data-act="x-share">Bagikan ke X</a></div>
+  <p class="hint">Untuk Instagram Story: simpan gambar ukuran Story, lalu upload dari galeri. Share ke X membuka tab baru berisi caption dan link, gambarnya ditempel manual.</p></div>`;
+ const first=!$('#studio .sheet');
+ if(first){$('#studio').innerHTML=`<div class="sheet" role="dialog" aria-label="Bagikan progress belajar"><div class="sh-head"><h2>Bagikan progress belajar</h2><button class="btn sm ghost" data-act="close-studio" aria-label="Tutup">${ico('x')}</button></div><div class="sh-body"><div class="pv" id="pv"></div><div id="ctlwrap"></div></div></div>`}
+ $('#ctlwrap').innerHTML=ctl;
+ $('#pv').innerHTML=`<div class="pvbox" id="pvbox"><div id="pvin">${cardHTML()}</div></div><div id="pvwarn"></div><div class="hint" style="text-align:center">Pratinjau persis seperti hasil gambar</div>`;
+ fitPreview();updateX();
+}
+function fitPreview(){
+ const s=S.st,pv=$('#pv');if(!pv)return;const pin=$('#pvin');
+ let lv=0;for(;lv<=2;lv++){pin.innerHTML=cardHTML(lv);const c=pin.firstElementChild;if(c.scrollHeight<=c.clientHeight+1)break}
+ if(lv>2){lv=2;pin.innerHTML=cardHTML(2)}
+ S.dense=lv;
+ const aw=Math.min(pv.clientWidth-40,360),mobile=innerWidth<900,ah=mobile?Infinity:innerHeight-240;
+ pin.style.zoom=Math.min(1,aw/360,ah/RATIO[s.ratio]);
+ const card=pin.firstElementChild;
+ $('#pvwarn').innerHTML=card.scrollHeight>card.clientHeight+2?`<div class="warn">${ico('x')} Isinya terlalu banyak untuk ukuran ini. Matikan beberapa data atau pilih ukuran lebih tinggi.</div>`:(lv?`<div class="hint" style="text-align:center">Ukuran teks dikecilkan otomatis biar muat</div>`:'');
+}
+addEventListener('resize',()=>{if(!$('#studio').hidden)fitPreview()});
+function updateX(){const a=$('#xlink');if(!a)return;a.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(S.st.caption)+'&url='+encodeURIComponent('https://'+profileLink());a.innerHTML='Bagikan ke X'}
+async function saveBlob(blob,name){
+ try{const dl=window.claude?.use?await window.claude.use('downloads'):null;if(dl){await dl.save({filename:name,data:blob});return true}}catch(e){if(e&&e.code==='declined')return false}
+ const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);return true;
+}
+async function exportPng(){
+ const btn=$('[data-act="save-img"]');btn.disabled=true;btn.textContent='Membuat gambar...';
+ try{
+  if(typeof html2canvas==='undefined')throw new Error('html2canvas gagal dimuat');
+  const st=$('#stage');st.innerHTML=cardHTML(S.dense||0);await (document.fonts&&document.fonts.ready);
+  const c=await html2canvas(st.firstElementChild,{scale:3,backgroundColor:null,useCORS:true,logging:false});
+  const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+  const ok=await saveBlob(blob,`gradient-progress-${S.st.period}-${S.st.tpl}.png`);
+  log('simpan gambar: '+S.st.tpl+' '+S.st.ratio);if(ok)toast('Gambar siap disimpan');
+ }catch(e){toast('Gagal membuat gambar: '+(e.message||e))}
+ btn.disabled=false;btn.innerHTML=`${ico('download')} Simpan gambar (PNG 1080px)`;
+}
+
+/* ============ FEEDBACK ============ */
+const FB=[
+ {k:'where',q:'Biasanya kamu update progress belajar di mana?',multi:1,o:['X / Twitter','Instagram Story','WhatsApp Status','TikTok','Grup belajar / Discord','Nggak pernah update']},
+ {k:'tpl',q:'Gaya kartu mana yang paling kamu pakai?',o:['Study Log','Statistik','Poster','Menuju Kampus','Belum ada yang cocok']},
+ {k:'data',q:'Data apa yang paling pengen kamu tunjukin?',multi:1,o:['Durasi belajar','Jumlah soal','Materi','Tingkat kesulitan','Streak','Kampus impian','Badge','Level','Akurasi']},
+ {k:'freq',q:'Seberapa sering kamu bakal pakai ini?',o:['Tiap hari','Tiap minggu','Sesekali','Nggak bakal']},
+ {k:'privacy',q:'Soal privasi, kamu nyaman kalau...',multi:1,o:['Username tampil','Akurasi tampil','Kampus impian tampil','Semua harus bisa disembunyiin']}
+];
+function fbModal(){
+ return `<div class="sheet" style="max-width:620px;margin:auto" role="dialog" aria-label="Kasih masukan"><div class="sh-head"><h2>Kasih masukan</h2><button class="btn sm ghost" data-act="modal-x" aria-label="Tutup">${ico('x')}</button></div>
+ <div class="ctl" style="overflow:auto"><p class="mut">Jawab singkat, lalu salin dan kirim ke DM atau reply pembuat prototype. Tanpa daftar akun.</p>
+ ${FB.map(x=>`<div class="q"><h4>${x.q}</h4><div class="chips">${x.o.map(o=>{const cur=S.fb[x.k]||(x.multi?[]:'');const on=x.multi?cur.includes(o):cur===o;return `<button class="tg" data-act="fb" data-k="${x.k}" data-v="${esc(o)}" data-multi="${x.multi?1:0}" aria-pressed="${on}">${o}</button>`}).join('')}</div></div>`).join('')}
+ <div class="q"><h4>Apa yang kurang atau pengen kamu tambahin?</h4><textarea id="fbnote" style="min-height:90px" placeholder="Misal: pengen ada stiker, mode polos, tema terang...">${esc(S.fb.note||'')}</textarea></div>
+ <button class="btn pri" data-act="fb-copy">${ico('copy')} Salin jawaban</button></div></div>`;
+}
+function fbText(){
+ const f=S.fb;const L=['Masukan prototype Share Progress Gradient'];
+ FB.forEach(x=>{const v=f[x.k];L.push(`${x.q} ${x.multi?(v&&v.length?v.join(', '):'-'):(v||'-')}`)});
+ L.push('Catatan: '+(f.note||'-'));
+ L.push('Aktivitas di prototype: '+(S.log.length?S.log.slice(-15).join(' > '):'-'));
+ return L.join('\n');
+}
+
+/* ============ EVENTS ============ */
+document.addEventListener('input',e=>{
+ if(e.target.id==='cap'){S.st.caption=e.target.value;S.st.dirty=true;updateX()}
+ if(e.target.id==='fbnote'){S.fb.note=e.target.value;saveFb()}
+});
+function saveFb(){try{localStorage.setItem('gsp-fb',JSON.stringify(S.fb))}catch(e){}}
+document.addEventListener('click',async e=>{
+ const t=e.target.closest('[data-act]');if(!t)return;
+ const a=t.dataset.act,v=t.dataset.v,s=S.st;
+ const restudio=()=>{if(!s.dirty)s.caption=makeCaption();renderStudio()};
+ switch(a){
+  case 'persona':S.persona=v;s.caption=makeCaption();render();break;
+  case 'nav':if(v==='mastery'){S.page='latsol';render()}else if(v==='profil'){S.page='profil';render()}else toast('Menu ini di luar prototype');break;
+  case 'tab':S.tab=v;render();break;
+  case 'range':S.range=+v;render();break;
+  case 'toast':toast(v);break;
+  case 'banner-x':S.banner=false;render();break;
+  case 'open-studio':openStudio(t.dataset.origin,t.dataset.period,t.dataset.badge);break;
+  case 'close-studio':closeStudio();break;
+  case 'sim-sesi':$('#modal').innerHTML=resultModal();$('#modal').hidden=false;log('selesai sesi latihan (demo)');break;
+  case 'modal-x':$('#modal').hidden=true;break;
+  case 'period':s.period=v;restudio();log('periode: '+v);break;
+  case 'tpl':s.tpl=v;restudio();log('gaya: '+v);break;
+  case 'ratio':s.ratio=v;restudio();log('ukuran: '+v);break;
+  case 'flag':s.flags[v]=s.flags[v]?0:1;if(v==='badge'&&!s.flags.badge)s.badge=null;restudio();log('data '+v+': '+(s.flags[v]?'on':'off'));break;
+  case 'cap-reset':s.dirty=false;s.caption=makeCaption();renderStudio();break;
+  case 'priv':s.privacy=v;renderStudio();log('privasi link: '+v);break;
+  case 'copy-cap':toast(await copyText(s.caption)?'Caption disalin':'Gagal menyalin, blok teks lalu salin manual');log('salin caption');break;
+  case 'copy-link':toast(await copyText('https://'+profileLink())?'Link disalin':'Gagal menyalin');log('salin link');break;
+  case 'x-share':log('bagikan ke X');break;
+  case 'save-img':exportPng();break;
+  case 'fb-open':$('#modal').innerHTML=fbModal();$('#modal').hidden=false;break;
+  case 'fb':{const k=t.dataset.k;if(t.dataset.multi==='1'){const c=S.fb[k]||[];S.fb[k]=c.includes(v)?c.filter(x=>x!==v):c.concat(v)}else S.fb[k]=S.fb[k]===v?'':v;saveFb();const y=$('#modal .ctl').scrollTop;$('#modal').innerHTML=fbModal();$('#modal .ctl').scrollTop=y;break}
+  case 'fb-copy':toast(await copyText(fbText())?'Jawaban disalin, kirim ke DM ya':'Gagal menyalin');break;
+ }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#modal').hidden)$('#modal').hidden=true;else if(!$('#studio').hidden)closeStudio()}});
+S.st.caption=makeCaption();render();
+</script>
