@@ -286,7 +286,7 @@ const rp=(n)=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 
 /* ============ STATE ============ */
 const S={persona:'rajin',page:'profil',tab:'ringkasan',range:7,achCat:'Semua',banner:true,
- st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,badge:1,level:1,sekolah:1,angkatan:0},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
+ st:{period:'week',tpl:'rapor',ratio:'3:4',open:false,flags:{durasi:1,soal:1,materi:1,kampus:1,username:1,streak:1,aktif:0,growth:1,kesulitan:0,benar:0,badge:1,level:1,sekolah:1,angkatan:0},badge:null,caption:'',dirty:false,origin:'-',hasSesi:false,privacy:'Semua orang'},
  log:[],fb:{},dense:0};
 try{S.fb=JSON.parse(localStorage.getItem('gsp-fb')||'{}')}catch(e){}
 const D=()=>DATA[S.persona];
@@ -499,7 +499,7 @@ const RATIO={'3:4':480,'4:5':450,'1:1':360,'9:16':640};
 const FLAGS=[['durasi','Durasi'],['soal','Soal & akurasi'],['materi','Materi'],['kesulitan','Tingkat kesulitan'],['streak','Streak'],['kampus','PTN impian'],['badge','Badge'],['level','Level & EXP'],['username','Nama'],['angkatan','Angkatan']];
 const LOCKED=['Nama','PTN & prodi impian','Waktu belajar','Jumlah soal','Subtes yang dipelajari'];
 const SEKUNDER=[['streak','Streak'],['growth','Perkembangan mastery'],['badge','Badge'],['level','Level & EXP'],['sekolah','Nama sekolah']];
-const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan']];
+const TERSIER=[['aktif','Hari aktif'],['kesulitan','Tingkat kesulitan'],['benar','Jumlah soal benar']];
 const TPLS=[['rapor','Ringkas','Semua data dalam satu kartu'],['mastery','Mastery naik','Subtes dan skill yang naik'],['latsol','Jejak latihan','Kesulitan dan tren soal'],['cerita','Highlight','Satu kalimat per capaian']];
 const wm='<div class="wm">Gradient<span class="o"><span class="i">UTBK</span></span></div>';
 const who=(f,d)=>f.username?(f.angkatan?`${esc(d.first)} (Angkatan ${d.angkatan})`:esc(d.first)):'Pejuang UTBK';
@@ -525,7 +525,7 @@ const dltG=(v,fm)=>`<span class="dl ${v>=0?'up':'dn'}">${ARW(v>=0)}${fm(Math.abs
 function HD(d,P,f,s){const lab=P.key==='week'?'MINGGU INI':P.key==='day'?'HARI INI':'SESI LATIHAN';
  return `<div class="hd">${wm}<span class="plab">${lab}<small>${P.range}</small></span></div><div class="nmrow"><span class="nm1">${esc(d.first)}</span>${idTop(d,f,s)}</div>${f.sekolah?`<div class="sch">${esc(d.school)}</div>`:''}<div class="kmp sm"><img class="bl" src="${IMG.bld}" alt=""><span class="lg"><img src="${IMG.itb}" alt=""></span><div class="kt"><b>${esc(d.kampus.ptn)}</b><small>PTN impian · ${esc(d.kampus.prodi)}</small></div></div>`}
 function CHIPS(d,P,f,noSoal){const o=noSoal==='min'?[]:[`<span class="cpr"><svg viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${fmtDur(P.sec)} belajar</span>`];
- if(!noSoal)o.push(`<span class="cpr">${P.soal} soal · ${pct(P.benar,P.soal)}% benar</span>`);
+ if(!noSoal)o.push(`<span class="cpr">${P.soal} soal · ${f.benar?P.benar+' benar':pct(P.benar,P.soal)+'% benar'}</span>`);
  if(f.streak)o.push(`<span class="cpr">${px('flame',14)}${d.streak} hari streak</span>`);
  return o.length?`<div class="ft" style="gap:5px">${o.join('')}</div>`:''}
 const TPL={
@@ -572,7 +572,7 @@ const TPL={
   const tiles=[];
   if(f.streak)tiles.push(`<div class="tl"><span class="tk">Streak</span><b class="fl">${px('flame',24)}${d.streak}<u> hari</u></b></div>`);
   if(f.aktif)tiles.push(tl('Hari aktif',act,'/7','minggu ini'));
-  tiles.push(tl('Soal dikerjakan',P.soal,'',`${acc}% benar`,accc));
+  tiles.push(tl('Soal dikerjakan',P.soal,'',f.benar?`${P.benar} benar · ${acc}%`:`${acc}% benar`,accc));
   const tgrid=tiles.length?`<div class="tl3" style="grid-template-columns:repeat(${tiles.length},1fr)">${tiles.join('')}</div>`:'';
   let grow='',newm='';
   if(f.growth){
@@ -598,7 +598,7 @@ const TPL={
   const dif=Object.entries(P.diff).filter(([,[t]])=>t>0),mxn=Math.max(...dif.map(([,[t]])=>t),1),pd=P.prevDiff||{};
   const sul=P.diff.Sulit||[0,0];
   const hl=sul[0]>0?`<em>${sul[1]}</em> dari ${sul[0]} soal sulit berhasil`:`<em>${P.soal}</em> soal dikerjakan`;
-  const sub=`${P.soal} soal · ${pct(P.benar,P.soal)}% benar`;
+  const sub=f.benar?`${P.soal} soal · ${P.benar} benar (${pct(P.benar,P.soal)}%)`:`${P.soal} soal · ${pct(P.benar,P.soal)}% benar`;
   const lad=dif.map(([n,[t,b]])=>{const a=pct(b,t),pa=pd[n]?pct(pd[n][1],pd[n][0]):null;return `<div class="lr3"><span class="ln3"><i style="background:${DIFFC[n]}"></i>${n}</span><div class="mb"><i class="b" style="width:${t/mxn*100}%;background:${DIFFC[n]}"></i></div><span class="lt">${t} soal</span><b class="la">${a}%</b>${pa!==null?dltG(a-pa,v=>(a-pa>=0?'+':'-')+v):''}</div>`}).join('')||'<div class="more">Belum ada soal</div>';
   let strip='';
   if(P.soalDays){const mx=Math.max(...P.soalDays);strip=`<div class="blk"><div class="bh"><span>Soal per hari</span><b>terbanyak ${mx}</b></div><div class="ds">${P.soalDays.map((v,i)=>{const a=P.accDays[i];const c=a>=70?'#4ade80':a>=60?'#ffc83d':'#ff6a5c';return `<div><i style="height:${Math.max(4,v/mx*46)}px;background:${c}"></i><span>${DAYS[i][0]}</span></div>`}).join('')}</div><div class="more">hijau 70% ke atas, kuning 60-69, merah di bawah 60</div></div>`}
@@ -612,7 +612,7 @@ const TPL={
   if(up.length)R.push(row('up','#4ade80',`Mastery naik di <b>${up.length} subtes</b>, paling melesat <b style="color:${SUB[up[0][0]].c}">${up[0][0]} +${up[0][1]}%</b>`));
   const sk=(P.skills||[]).filter(x=>x.to>x.from).sort((a,b)=>(b.to-b.from)-(a.to-a.from))[0];
   if(sk)R.push(row('tg','#ffc83d',`Skill <b>${esc(sk.name)}</b> naik <b>${sk.from}% → ${sk.to}%</b>`));
-  R.push(row('ok','#22d3ee',sul[0]>0?`<b>${P.soal} soal</b>, ${sul[1]} dari ${sul[0]} soal sulit berhasil (<b>${pct(sul[1],sul[0])}%</b>)`:`<b>${P.soal} soal</b> dikerjakan, ${pct(P.benar,P.soal)}% benar`));
+  R.push(row('ok','#22d3ee',sul[0]>0?`<b>${P.soal} soal</b>${f.benar?`, ${P.benar} benar`:''}, ${sul[1]} dari ${sul[0]} soal sulit berhasil (<b>${pct(sul[1],sul[0])}%</b>)`:`<b>${P.soal} soal</b> dikerjakan, ${f.benar?`${P.benar} benar (${pct(P.benar,P.soal)}%)`:`${pct(P.benar,P.soal)}% benar`}`));
   if((P.levelUp||[]).length)R.push(row('lv','#b285f0',`Naik tingkat soal di <b>${P.levelUp.map(esc).join(', ')}</b>`));
   let wt=`<b>${fmtDur(P.sec)}</b> belajar`;if(P.key==='week'&&d.lastWeekSec>0){const df=P.sec-d.lastWeekSec;wt+=`, <b style="color:${df>=0?'#4ade80':'#fb923c'}">${df>=0?'+':'-'}${fmtDur(Math.abs(df))}</b> dari minggu lalu`}
   R.push(row('ck','#fde68a',wt));
@@ -642,7 +642,7 @@ function makeCaption(){
  const d=D(),s=S.st,P=d[s.period],f=s.flags,L=[],wk=P.key==='week',act=d.days.filter(x=>x>0).length;
  L.push(wk?'update belajar minggu ini':P.key==='day'?'update belajar hari ini':'abis latihan soal');
  let x=`- ${fmtDur(P.sec)} belajar`;if(f.growth&&wk&&d.lastWeekSec>0){const df=P.sec-d.lastWeekSec;x+=` (${df>=0?'+':'-'}${fmtDur(Math.abs(df))} dari minggu lalu)`}L.push(x);
- L.push(`- ${P.soal} soal${P.soal?` (${pct(P.benar,P.soal)}% benar)`:''}`);
+ L.push(f.benar?`- ${P.soal} soal, ${P.benar} benar (${pct(P.benar,P.soal)}%)`:`- ${P.soal} soal${P.soal?` (${pct(P.benar,P.soal)}% benar)`:''}`);
  if(P.subtes.length)L.push(`- subtes: ${P.subtes.map(x=>x.k).join(', ')}`);
  if(f.streak)L.push(`- streak ${d.streak} hari`);
  if(f.aktif)L.push(`- aktif ${act}/7 hari`);
