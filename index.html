@@ -803,7 +803,7 @@ function openStudio(origin,period,badge){
 function closeStudio(){$('#studio').hidden=true;document.body.style.overflow='';$('#studio').innerHTML=''}
 function renderStudio(){
  const s=S.st;
- const periods=[['sesi','Sesi ini'],['day','Hari ini'],['week','Minggu ini']].filter(([k])=>k!=='sesi'||s.hasSesi||s.period==='sesi');
+ const periods=[['sesi','Sesi ini'],['day','Hari ini'],['week','7 hari terakhir']].filter(([k])=>k!=='sesi'||s.hasSesi||s.period==='sesi');
  const seg=(act,items,cur)=>`<div role="group" class="flex w-fit gap-1 rounded-full border-2 border-midnight-850 bg-midnight-900 p-1">${items.map(([k,t])=>k===cur?`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="true" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white bg-surface-brand mb-1 px-4 py-2 text-sm leading-5 tracking-[-0.28px] shadow-[0_4px_0_var(--accent-off-purple)] cursor-pointer">${t}</button>`:`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="false" class="${FOCUS} font-nunito rounded-full font-bold whitespace-nowrap text-white border border-midnight-700 bg-midnight-800 px-3 py-2.5 text-xs leading-4.5 hover:bg-midnight-700 cursor-pointer">${t}</button>`).join('')}</div>`;
  const tile=(act,k,t,x,on)=>`<button type="button" data-act="${act}" data-v="${k}" aria-pressed="${on}" class="${FOCUS} rounded-xl border-2 p-3 text-left transition-colors cursor-pointer ${on?'border-brand-300 bg-[rgba(178,133,240,0.18)]':'border-midnight-850 bg-midnight-800/40 hover:bg-midnight-800'}"><span class="font-nunito block text-[15px] font-extrabold text-white">${t}</span><span class="font-nunito-sans block text-xs font-semibold text-white/60">${x}</span></button>`;
  const cust=true;
